@@ -8,6 +8,8 @@ module Hari
         end
 
         def self.desserialize(value, options = {})
+          return unless value
+
           Float value
         rescue
           raise SerializationError, "#{options[:name]}:#{value} is not a float"

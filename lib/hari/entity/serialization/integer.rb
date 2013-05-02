@@ -9,6 +9,7 @@ module Hari
 
         def self.desserialize(value, options = {})
           case value
+          when nil then nil
           when ::String
             if value =~ /^\d+$/
               value.to_i

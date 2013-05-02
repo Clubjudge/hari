@@ -70,7 +70,7 @@ module Hari
       attrs = attributes
       attrs.delete 'id'
 
-      "<#{self.class} id=#{id} attributes=#{attrs}>"
+      "<#{self.class} id='#{id}' attributes=#{attrs}>"
     end
 
   end
