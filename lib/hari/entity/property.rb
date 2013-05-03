@@ -12,11 +12,11 @@ module Hari
       end
 
       def serialize(value)
-        serializer.serialize(value, name: name)
+        serializer.serialize value, name: name
       end
 
       def desserialize(value)
-        serializer.desserialize(value, name: name)
+        serializer.desserialize value, name: name
       end
 
     end

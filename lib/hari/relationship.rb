@@ -14,12 +14,12 @@ module Hari
       @end_node ||= Hari::Node.find(end_node_id)
     end
 
-    def key(dir = nil)
-      case dir
+    def key(direction = nil)
+      case direction
       when nil
         "#{start_node_id}:#{label}:#{end_node_id}"
       else
-        "#{start_node_id}:#{label}:#{dir}"
+        "#{start_node_id}:#{label}:#{direction}"
       end
     end
 
@@ -27,10 +27,10 @@ module Hari
       "rel:#{start_node.id}:#{end_node.id}:#{backend.type}:#{SecureRandom.hex(3)}"
     end
 
-    def self.create(label, start_node, end_node, attributes = {})
-      attrs = attributes.merge(label: label,
-                               start_node_id: node_id(start_node),
-                               end_node_id: node_id(end_node))
+    def self.create(label, start_node, end_node, attrs = {})
+      attrs = attrs.merge(label: label,
+                          start_node_id: node_id(start_node),
+                          end_node_id:   node_id(end_node))
       new(attrs).save
     end
 
@@ -47,7 +47,7 @@ module Hari
       self.class.backend
     end
 
-    def weight(dir)
+    def weight(direction)
       ::Time.now.to_f
     end
 

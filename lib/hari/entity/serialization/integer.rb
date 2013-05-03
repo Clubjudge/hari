@@ -8,17 +8,9 @@ module Hari
         end
 
         def self.desserialize(value, options = {})
-          case value
-          when nil then nil
-          when ::String
-            if value =~ /^\d+$/
-              value.to_i
-            else
-              raise
-            end
-          else
-            Integer(value)
-          end
+          return unless value
+
+          Integer value
         rescue
           raise SerializationError, "#{options[:name]}:#{value} is not an integer"
         end

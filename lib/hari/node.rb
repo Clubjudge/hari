@@ -1,3 +1,7 @@
+require 'hari/node/queries/step'
+require 'hari/node/queries/start'
+require 'hari/node/queries/runnable'
+require 'hari/node/queries/relationship'
 require 'hari/node/queries'
 
 module Hari
@@ -6,15 +10,19 @@ module Hari
 
     property :model_id
 
+    def initialize(attrs = {})
+      attrs = { model_id: attrs } if attrs.kind_of?(::Fixnum)
+      super
+    end
+
     def generate_id
-      case model_id
-      when nil
-        super
-      when model_id.to_s.include?('#')
-        model_id
-      else
-        self.class.to_s.underscore + "#" + model_id.to_s
-      end
+      return super unless model_id
+
+      model_id.to_s.include?('#') ? model_id.to_s : "#{node_type}##{model_id}"
+    end
+
+    def node_type
+      self.class.to_s.undescore
     end
 
   end

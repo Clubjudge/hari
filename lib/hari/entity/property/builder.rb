@@ -15,7 +15,15 @@ module Hari
           args.each { |name| property name, options }
 
           @properties ||= begin
-            self == Hari::Entity ? [] : self.ancestors.select { |a| a.ancestors.include? Hari::Entity }[1].properties.dup
+            if self == Hari::Entity
+              []
+            else
+              entities_ancestors = ancestors.select do |a|
+                a.ancestors.include? Hari::Entity
+              end
+
+              entities_ancestors[1].properties.dup # the closest
+            end
           end
         end
 
