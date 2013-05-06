@@ -1,10 +1,12 @@
 function _h.fetch_relations_ids(start_node_id, relation, direction, start, stop, h)
-  local key = 'hari:'..start_node_id..':r:'..relation..':'..direction
+  local key = 'hari:'..start_node_id..':'..relation..':'..direction
+  redis.log(redis.LOG_NOTICE, 'key: '..key)
   return redis.call('zrevrange', key, start, stop)
 end
 
 function _h.fetch_nodes_ids(start_node_id, relation, direction, start, stop, h)
   local rels_ids = h.fetch_relations_ids(start_node_id, relation, direction, start, stop, h)
 
-  return h.map(rels_ids, function(r) return h.split(r, ':')[2] end)
+  local index = (direction == 'out' and 3 or 2)
+  return h.map(rels_ids, function(r) return h.split(r, ':')[index] end)
 end
