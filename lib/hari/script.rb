@@ -3,7 +3,7 @@ module Hari
 
     PATH = File.expand_path('../script', __FILE__)
 
-    attr_reader :name, :content, :args_count, :imported
+    attr_reader :name, :content, :args_count, :imported, :sha
 
     def initialize(name = SecureRandom.hex(6), content = '')
       @name, @content = name, content
@@ -25,11 +25,21 @@ module Hari
         imported << file
       end
 
+      @sha = nil # after change, reset script load
+
       self
     end
 
     def import!(*files)
       import *files, hard: true
+    end
+
+    def load!
+      @sha ||= Hari.redis.script(:load, content)
+    end
+
+    def run(args)
+      Hari.redis.evalsha @sha, [], args
     end
 
     private

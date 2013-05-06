@@ -6,8 +6,9 @@ module Hari
         # RUN BABY RUN
 
         def to_a
-
-          binding.pry
+          s = script
+          s.load!
+          s.run script_args
         end
 
         alias result to_a

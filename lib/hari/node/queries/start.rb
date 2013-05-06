@@ -15,7 +15,7 @@ module Hari
         end
 
         def script_args
-          start_node_id
+          [start_node_id.generate_id]
         end
 
       end
