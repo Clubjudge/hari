@@ -7,10 +7,12 @@ module Hari
 
         attr_reader :parent, :direction, :relation, :options
 
-        def initialize(parent, direction, relation, options = {})
+        def initialize(parent, direction, relation, *args)
           @parent, @direction, @relation = parent, direction, relation
           @options = {}
-          options.each { |k, v| send k, v }
+          args.extract_options!.each { |k, v| send k, v }
+
+          @options[:backend] = args.first.presence or :sorted_set
         end
 
         %w(limit skip step).each do |method|
