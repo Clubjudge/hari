@@ -5,6 +5,8 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/module/delegation'
 require 'active_support/core_ext/object/try'
 require 'yajl'
+require 'erb'
+require 'ostruct'
 
 require 'hari/version'
 require 'hari/configuration'

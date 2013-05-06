@@ -1,0 +1,7 @@
+local relation_<%= index %>  = ARGV[<%= args_index + 1 %>]
+local direction_<%= index %> = ARGV[<%= args_index + 2 %>]
+local limit_<%= index %>     = ARGV[<%= args_index + 3 %>]
+local skip_<%= index %>      = ARGV[<%= args_index + 4 %>]
+local step_<%= index %>      = ARGV[<%= args_index + 5 %>]
+
+return _h.fetch_nodes_ids(relation_<%= index %>, direction_<%= index %>, skip_<%= index %>, limit_<%= index %>, _h)

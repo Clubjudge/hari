@@ -7,6 +7,7 @@ module Hari
 
         def to_a
 
+          binding.pry
         end
 
         alias result to_a
