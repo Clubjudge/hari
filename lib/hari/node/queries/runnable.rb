@@ -6,6 +6,7 @@ module Hari
         # RUN BABY RUN
 
         def to_a
+
         end
 
         alias result to_a

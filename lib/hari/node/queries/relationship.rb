@@ -39,6 +39,11 @@ module Hari
 
         alias type types
 
+        def rollup
+          options[:rollup] = true
+          self
+        end
+
       end
     end
   end
