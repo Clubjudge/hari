@@ -19,6 +19,12 @@ module Hari
           options.fetch :result_type, :nodes
         end
 
+        def calculate_limit
+          return -1 unless options[:limit]
+
+          options.fetch(:skip, 0) + options[:limit] - 1
+        end
+
         %w(limit skip step).each do |method|
           define_method method do |value|
             options[method.to_sym] = value
@@ -58,14 +64,14 @@ module Hari
 
         def script_args(result = false)
           parent.script_args + [
-            relation.to_s,
-            direction.to_s,
-            options.fetch(:limit, -1).to_s,
-            options.fetch(:skip, 0).to_s,
-            options.fetch(:step, 5).to_s,
-            result_type.to_s,
-            (result ? '1' : '0')
-          ]
+            relation,
+            direction,
+            calculate_limit,
+            options.fetch(:skip, 0),
+            options.fetch(:step, 5),
+            result_type,
+            (result ? 1 : 0)
+          ].map(&:to_s)
         end
 
       end

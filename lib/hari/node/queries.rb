@@ -7,7 +7,7 @@ module Hari
       private
 
       def query
-        @query || Queries::Start.new(self)
+        @query ||= Queries::Start.new(self)
       end
 
     end
