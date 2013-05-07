@@ -3,10 +3,12 @@ require 'hari/node/queries/start'
 require 'hari/node/queries/runnable'
 require 'hari/node/queries/relationship'
 require 'hari/node/queries'
+require 'hari/node/serialization'
 
 module Hari
   class Node < Entity
     include Hari::Node::Queries
+    extend  Hari::Node::Serialization
 
     property :model_id
 

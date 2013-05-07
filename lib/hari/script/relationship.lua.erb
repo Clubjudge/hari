@@ -1,7 +1,21 @@
-local relation_<%= index %>  = ARGV[<%= args_index + 1 %>]
-local direction_<%= index %> = ARGV[<%= args_index + 2 %>]
-local limit_<%= index %>     = ARGV[<%= args_index + 3 %>]
-local skip_<%= index %>      = ARGV[<%= args_index + 4 %>]
-local step_<%= index %>      = ARGV[<%= args_index + 5 %>]
+<%= locals_from_args %w(relation direction limit skip step result_type return) %>
 
-return _h.fetch_nodes_ids(start_node_id, relation_<%= index %>, direction_<%= index %>, skip_<%= index %>, limit_<%= index %>, _h)
+local <%= l(:result) %> = {}
+
+if <%= l(:result_type) %> == 'nodes_ids' then
+  <%= l(:result) %> = _h.fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
+end
+
+if <%= l(:result_type) %> == 'relations_ids' then
+  <%= l(:result) %> = _h.fetch_relations_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
+end
+
+if <%= l(:result_type) %> == 'nodes' then
+  <%= l(:result) %> = _h.fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
+  <%= l(:result) %> = _h.map(<%= l(:result) %>, function(r) return 'hari:'..r end)
+  <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
+end
+
+if <%= l(:return) %> == '1' then
+  return <%= l(:result) %>
+end

@@ -1,3 +1,5 @@
+require 'hari/script/template'
+
 module Hari
   class Script
 
@@ -39,15 +41,15 @@ module Hari
     end
 
     def run(args)
-      Hari.redis.evalsha @sha, [], args
+      Hari.redis.evalsha @sha, keys: [], argv: args
     end
 
     private
 
     def resolve_template(file, options)
       template = ERB.new(File.read("#{PATH}/#{file}.lua.erb"))
-      args = options.merge(args_index: args_count, index: SecureRandom.hex(6))
-      template.result OpenStruct.new(args).instance_eval('binding()')
+      args = options.merge(args_index: args_count)
+      template.result Template.new(args).get_bindings
     end
 
   end

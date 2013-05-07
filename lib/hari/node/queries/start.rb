@@ -4,10 +4,10 @@ module Hari
       class Start
         include Step
 
-        attr_reader :start_node_id
+        attr_reader :start_node
 
-        def initialize(start_node_id)
-          @start_node_id = start_node_id
+        def initialize(start_node)
+          @start_node = start_node
         end
 
         def script(s)
@@ -15,7 +15,7 @@ module Hari
         end
 
         def script_args
-          [start_node_id.generate_id]
+          [start_node.generate_id]
         end
 
       end

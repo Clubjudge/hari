@@ -15,6 +15,10 @@ module Hari
           @options[:backend] = args.first.presence || :sorted_set
         end
 
+        def result_type
+          options.fetch :result_type, :nodes
+        end
+
         %w(limit skip step).each do |method|
           define_method method do |value|
             options[method.to_sym] = value
@@ -31,7 +35,7 @@ module Hari
         alias type types
 
         # TODO also have a custom type resolver that could bring moar complex stuff
-        %w(nodes_ids relations_ids).each do |result_type|
+        %w(nodes_ids relations_ids nodes rollup).each do |result_type|
           define_method result_type do
             options[:result_type] = result_type.to_sym
             self
@@ -42,31 +46,25 @@ module Hari
         alias rel_ids relations_ids
         alias rids    relations_ids
 
-        # TODO for later, a type resolver (?) that will bring also other related
-        def rollup
-          options[:rollup] = true
-          self
-        end
-
         def script(s = Script.new)
           @script ||= begin
             parent.script(s)
             s.import 'utils/map', 'utils/split'
             s.import "relationship/#{options[:backend]}_fetcher"
             s.import! 'relationship'
-            s.increment_args 5
+            s.increment_args 7
           end
         end
 
-        def script_args
-          parent.script_args +
-
-          [
+        def script_args(result = false)
+          parent.script_args + [
             relation.to_s,
             direction.to_s,
             options.fetch(:limit, -1).to_s,
             options.fetch(:skip, 0).to_s,
-            options.fetch(:step, 5).to_s
+            options.fetch(:step, 5).to_s,
+            result_type.to_s,
+            (result ? '1' : '0')
           ]
         end
 
