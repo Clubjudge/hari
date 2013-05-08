@@ -5,10 +5,11 @@ module Hari
         include Step
         include Runnable
 
-        attr_reader :parent, :direction, :relation, :options
+        attr_reader :parent, :direction, :relation, :level, :options
 
         def initialize(parent, direction, relation, *args)
           @parent, @direction, @relation = parent, direction, relation
+          @level = parent.level + 1
           @options = {}
           args.extract_options!.each { |k, v| send k, v }
 
@@ -57,7 +58,7 @@ module Hari
             parent.script(s)
             s.import 'utils/map', 'utils/split'
             s.import "relationship/#{options[:backend]}_fetcher"
-            s.import! 'relationship'
+            s.import! 'relationship', index: level
             s.increment_args 7
           end
         end

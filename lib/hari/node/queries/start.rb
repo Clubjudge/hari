@@ -4,10 +4,11 @@ module Hari
       class Start
         include Step
 
-        attr_reader :start_node
+        attr_reader :start_node, :level
 
         def initialize(start_node)
           @start_node = start_node
+          @level = 0
         end
 
         def script(s)

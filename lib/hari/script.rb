@@ -33,7 +33,8 @@ module Hari
     end
 
     def import!(*files)
-      import *files, hard: true
+      options = files.extract_options!
+      import *files, options.merge(hard: true)
     end
 
     def load!
