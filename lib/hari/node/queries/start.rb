@@ -11,7 +11,7 @@ module Hari
           @level = 0
         end
 
-        def script(s)
+        def script(result, s)
           s.import(:base, :start_node).increment_args 1
         end
 

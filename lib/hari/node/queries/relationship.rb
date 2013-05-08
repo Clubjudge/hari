@@ -55,12 +55,12 @@ module Hari
         alias rel_ids relations_ids
         alias rids    relations_ids
 
-        def script(s = Script.new)
+        def script(result, s = Script.new)
           @script ||= begin
-            parent.script(s)
+            parent.script(false, s)
             s.import 'utils/map', 'utils/split'
             s.import "relationship/#{options[:backend]}_fetcher"
-            s.import! 'relationship', index: level
+            s.import! 'relationship', index: level, result: result, result_type: result_type(result)
             s.increment_args 7
           end
         end

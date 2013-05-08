@@ -2,20 +2,16 @@
 
 local <%= l(:result) %> = {}
 
-if <%= l(:result_type) %> == 'nodes_ids' then
+<% if result_type == :nodes_ids %>
   <%= l(:result) %> = _h.fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
-end
-
-if <%= l(:result_type) %> == 'relations_ids' then
+<% elsif result_type == :relations_ids %>
   <%= l(:result) %> = _h.fetch_relations_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
-end
-
-if <%= l(:result_type) %> == 'nodes' then
+<% elsif result_type == :nodes %>
   <%= l(:result) %> = _h.fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
   <%= l(:result) %> = _h.map(<%= l(:result) %>, function(r) return 'hari:'..r end)
   <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
-end
+<% end %>
 
-if <%= l(:return) %> == '1' then
+<% if result %>
   return <%= l(:result) %>
-end
+<% end %>
