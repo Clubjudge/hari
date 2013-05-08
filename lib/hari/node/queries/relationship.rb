@@ -16,7 +16,9 @@ module Hari
           @options[:backend] = args.first.presence || :sorted_set
         end
 
-        def result_type
+        def result_type(result = false)
+          return :nodes_ids unless result
+
           options.fetch :result_type, :nodes
         end
 
@@ -70,7 +72,7 @@ module Hari
             calculate_limit,
             options.fetch(:skip, 0),
             options.fetch(:step, 5),
-            result_type,
+            result_type(result),
             (result ? 1 : 0)
           ].map(&:to_s)
         end

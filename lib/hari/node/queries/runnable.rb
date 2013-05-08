@@ -14,7 +14,7 @@ module Hari
         private
 
         def handle_result(result)
-          case result_type
+          case result_type(true)
           when :nodes
             result.map &Hari::Node.method(:from_source)
           else
