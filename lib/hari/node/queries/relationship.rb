@@ -16,6 +16,10 @@ module Hari
           @options[:backend] = args.first.presence || :sorted_set
         end
 
+        def backend
+          options[:backend]
+        end
+
         def result_type(result = false)
           return :nodes_ids unless result
 
@@ -60,7 +64,9 @@ module Hari
             parent.script(false, s)
             s.import 'utils/map', 'utils/split'
             s.import "relationship/#{options[:backend]}_fetcher"
-            s.import! 'relationship', index: level, result: result, result_type: result_type(result)
+            s.import "relationship/#{options[:backend]}_merge" if level > 1
+            s.import! 'relationship', index: level, result: result,
+              result_type: result_type(result), backend: backend
             s.increment_args 7
           end
         end

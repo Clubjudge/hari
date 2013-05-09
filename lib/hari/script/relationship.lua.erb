@@ -2,14 +2,24 @@
 
 local <%= l(:result) %> = {}
 
-<% if result_type == :nodes_ids %>
-  <%= l(:result) %> = _h.fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
-<% elsif result_type == :relations_ids %>
-  <%= l(:result) %> = _h.fetch_relations_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
-<% elsif result_type == :nodes %>
-  <%= l(:result) %> = _h.fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
-  <%= l(:result) %> = _h.map(<%= l(:result) %>, function(r) return 'hari:'..r end)
-  <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
+<% if index == 1 %>
+  <% if result_type == :nodes_ids %>
+    <%= l(:result) %> = _h.<%= backend %>_fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
+  <% elsif result_type == :relations_ids %>
+    <%= l(:result) %> = _h.<%= backend %>_fetch_relations_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
+  <% elsif result_type == :nodes %>
+    <%= l(:result) %> = _h.<%= backend %>_fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :skip, :limit) %>, _h)
+    <%= l(:result) %> = _h.map(<%= l(:result) %>, function(r) return 'hari:'..r end)
+    <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
+  <% end %>
+<% else %>
+  <%= l(:result) %> = _h.<%= backend %>_merge('<%= SecureRandom.hex(6) %>', <%= l(:result, index: (index - 1)) %>, <%= l(:relation, :direction, :limit, :skip, :step, :result_type) %>, _h)
+
+  _h.map(<%= l(:result) %>, function(r) redis.log(redis.LOG_NOTICE, 'result:'..r) end)
+
+  <% if result_type == :nodes %>
+    <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
+  <% end %>
 <% end %>
 
 <% if result %>

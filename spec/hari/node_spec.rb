@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Hari::Node, wip: true do
+describe Hari::Node do
   let(:joao)     { TestNode.create name: 'Joao',     model_id: 25 }
   let(:teresa)   { TestNode.create name: 'Teresa',   model_id: 26 }
   let(:raimundo) { TestNode.create name: 'Raimundo', model_id: 27 }
   let(:maria)    { TestNode.create name: 'Maria',    model_id: 28 }
   let(:joaquim)  { TestNode.create name: 'Joaquim',  model_id: 29 }
-  let(:lili)     { TestNode.create name: 'Lili',    model_id: 30 }
+  let(:lili)     { TestNode.create name: 'Lili',     model_id: 30 }
 
   before do
     Hari.redis.flushdb
@@ -25,7 +25,7 @@ describe Hari::Node, wip: true do
     joao.out(:follow).limit(1).skip(1).to_a.should eq [raimundo]
   end
 
-  pending 'can chain queries' do
+  it 'can chain queries' do
     followers_following = joao.out(:follow).out(:follow).to_a
     followers_following.map(&:id).sort.should eq [raimundo, maria, joaquim].map(&:id).sort
   end

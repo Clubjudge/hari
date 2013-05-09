@@ -13,7 +13,9 @@ module Hari
       end
 
       def l(*names)
-        names.map { |n| "#{n}_#{index}" }.join(', ')
+        options = names.extract_options!
+        i = options.fetch(:index, index)
+        Array(names).map { |n| "#{n}_#{i}" }.join(', ')
       end
 
     end

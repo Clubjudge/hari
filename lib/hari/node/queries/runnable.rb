@@ -6,6 +6,7 @@ module Hari
         def to_a
           s = script(true)
           s.load!
+
           args = script_args(true)
           handle_result s.run(args)
         end
@@ -22,7 +23,6 @@ module Hari
             result
           end
         end
-
 
       end
     end
