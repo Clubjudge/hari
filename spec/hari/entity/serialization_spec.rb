@@ -4,7 +4,7 @@ describe Hari::Entity::Serialization do
 
   describe '#to_json' do
     it 'serializes instance to json' do
-      model = TestModel.new(name: 'Ze',
+      model = TestEntity.new(name: 'Ze',
                             birth: Date.new(1986, 01, 23),
                             points: '200')
 
@@ -14,7 +14,7 @@ describe Hari::Entity::Serialization do
 
   describe '.from_json' do
     it 'desserializes instance from json' do
-      model = TestModel.from_json('{"name":"Ze","birth":"1986-01-23","points":200}')
+      model = TestEntity.from_json('{"name":"Ze","birth":"1986-01-23","points":200}')
       model.name.should == 'Ze'
       model.birth.should == Date.new(1986, 01, 23)
       model.points.should == 200
