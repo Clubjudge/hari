@@ -22,7 +22,7 @@ describe Hari::Node do
   it 'can has queries' do
     joao.out(:follow).to_a.should eq [lili, raimundo, teresa]
     joao.out(:follow).limit(1).to_a.should eq [lili]
-    joao.out(:follow).limit(1).skip(1).to_a.should eq [raimundo]
+    joao.out(:follow).limit(2).to_a.should eq [lili, raimundo]
   end
 
   it 'can chain queries' do

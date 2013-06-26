@@ -27,12 +27,10 @@ module Hari
         end
 
         def calculate_limit
-          return -1 unless options[:limit]
-
-          options.fetch(:skip, 0) + options[:limit] - 1
+          options[:limit] ? options[:limit] -1 : -1
         end
 
-        %w(limit skip step).each do |method|
+        %w(limit from step).each do |method|
           define_method method do |value|
             options[method.to_sym] = value
             self
@@ -76,7 +74,7 @@ module Hari
             relation,
             direction,
             calculate_limit,
-            options.fetch(:skip, 0),
+            options.fetch(:from, ''),
             options.fetch(:step, 5),
             result_type(result),
             (result ? 1 : 0)
