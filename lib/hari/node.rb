@@ -24,7 +24,7 @@ module Hari
     end
 
     def node_type
-      self.class.to_s.underscore
+      @node_type || self.class.to_s.underscore
     end
 
   end

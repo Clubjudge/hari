@@ -20,4 +20,11 @@ module Hari
   extend self
   extend Configuration
 
+  def self.node(args = {})
+    type, id = args.first
+    node = Node.new(model_id: id)
+    node.instance_variable_set '@node_type', type
+    node
+  end
+
 end
