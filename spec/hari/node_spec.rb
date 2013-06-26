@@ -10,25 +10,57 @@ describe Hari::Node do
 
   before do
     Hari.redis.flushdb
-    Hari::Relationship.create :follow, joao, teresa
-    Hari::Relationship.create :follow, joao, raimundo
-    Hari::Relationship.create :follow, joao, lili
-    Hari::Relationship.create :follow, teresa,   raimundo
-    Hari::Relationship.create :follow, teresa,   maria
-    Hari::Relationship.create :follow, raimundo, maria
-    Hari::Relationship.create :follow, raimundo, joaquim
   end
 
-  it 'can has queries' do
-    joao.out(:follow).to_a.should eq [lili, raimundo, teresa]
-    joao.out(:follow).limit(1).to_a.should eq [lili]
-    joao.out(:follow).limit(2).to_a.should eq [lili, raimundo]
+  describe 'queries' do
+    before do
+      Hari::Relationship.create :follow, joao, teresa
+      Hari::Relationship.create :follow, joao, raimundo
+      Hari::Relationship.create :follow, joao, lili
+      Hari::Relationship.create :follow, teresa,   raimundo
+      Hari::Relationship.create :follow, teresa,   maria
+      Hari::Relationship.create :follow, raimundo, maria
+      Hari::Relationship.create :follow, raimundo, joaquim
+    end
 
-    Hari.node(test_node: 25).out(:follow).to_a.should eq [lili, raimundo, teresa]
+    it 'can has queries' do
+      joao.out(:follow).to_a.should eq [lili, raimundo, teresa]
+      joao.out(:follow).limit(1).to_a.should eq [lili]
+      joao.out(:follow).limit(2).to_a.should eq [lili, raimundo]
+
+      Hari.node(test_node: 25).out(:follow).to_a.should eq [lili, raimundo, teresa]
+    end
+
+    it 'can chain queries' do
+      followers_following = joao.out(:follow).out(:follow).to_a
+      followers_following.map(&:id).sort.should eq [raimundo, maria, joaquim].map(&:id).sort
+    end
   end
 
-  it 'can chain queries' do
-    followers_following = joao.out(:follow).out(:follow).to_a
-    followers_following.map(&:id).sort.should eq [raimundo, maria, joaquim].map(&:id).sort
+  describe 'queries with pagination' do
+    before do
+      followings = [teresa, raimundo, maria, joaquim, lili]
+      x = 5
+
+      followings.each do |following|
+        Delorean.time_travel_to x.minutes.ago do
+          Hari::Relationship.create :follow, joao, following
+        end
+
+        x += 5
+      end
+    end
+
+    it 'paginates queries' do
+      following = joao.out(:follow).from(15.minutes.ago.to_f).to_a
+      following.map(&:id).sort.should eq [maria, joaquim, lili].map(&:id).sort
+    end
+
+    it 'paginates chained queries' do
+      Hari::Relationship.create :follow, teresa, joao
+
+      following = teresa.out(:follow).out(:follow).from(15.minutes.ago.to_f).to_a
+      following.map(&:id).sort.should eq [maria, joaquim, lili].map(&:id).sort
+    end
   end
 end

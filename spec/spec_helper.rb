@@ -2,6 +2,8 @@ $:.push '../lib'
 
 require 'hari'
 require 'pry'
+require 'delorean'
+require 'active_support/core_ext/numeric/time'
 
 class TestEntity < Hari::Entity
   property :name
