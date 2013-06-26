@@ -27,4 +27,9 @@ module Hari
     node
   end
 
+  def self.relation!(type, args = {})
+    from_type, from_id, to_type, to_id = args.to_a.flatten
+    Relationship.create type, "#{from_type}##{from_id}", "#{to_type}##{to_id}"
+  end
+
 end
