@@ -20,7 +20,15 @@ function _h.sorted_set_merge(stream_key, nodes_ids, relation, direction, limit, 
 
     while digg do
       local key = 'hari:'..node_id..':'..relation..':'..direction
-      local rel_nodes_ids_and_scores = redis.call('zrevrange', key, fetch_start, fetch_count, 'withscores')
+      local rel_nodes_ids_and_scores = nil
+
+      if from == '' then
+        rel_nodes_ids_and_scores = redis.call('zrevrange', key, fetch_start, fetch_count, 'withscores')
+      else
+        rel_nodes_ids_and_scores = redis.call('zrevrangebyscore', key, from, '-inf',
+          'withscores', 'limit', fetch_start, fetch_count)
+      end
+
       local last_node_id = nil
 
       for i = 1, #rel_nodes_ids_and_scores, 2 do
