@@ -6,7 +6,7 @@ before_install:
   - "gem install bundler --no-rdoc --no-ri 1>/dev/null"
 after_failure: sudo cat /var/log/redis/redis.log
 script:
-  - "bin/spec"
+  - "rspec spec"
 notifications:
   email: false
   campfire:
