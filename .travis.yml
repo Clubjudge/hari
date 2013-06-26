@@ -1,0 +1,15 @@
+language: ruby
+rvm:
+  - 1.9.3-p429
+  - 2.0.0-p195
+before_install:
+  - "gem install bundler --no-rdoc --no-ri 1>/dev/null"
+after_failure: sudo cat /var/log/redis/redis.log
+script:
+  - "bin/spec"
+notifications:
+  email: false
+  campfire:
+    secure: "COyR7y6VhbUK1MZwy75GksEJcsIASweKbKwwADIL45rI1df7H6op8ee+8G6o\nqBx5a9g7JGkWxAIHb2ML+lCDGe4zniruZdpljI+l+6XSKlkhGip3+4uszYEC\nkSyc3PyYQj7liREnMzwQ8VyH6y60hyfcfF5VtNEF13IWYoYa7WY="
+services:
+  - redis-server
