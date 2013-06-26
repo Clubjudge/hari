@@ -27,7 +27,7 @@ module Hari
         end
 
         def calculate_limit
-          options[:limit] ? options[:limit] -1 : -1
+          options[:limit] ? (options[:limit].to_i - 1) : -1
         end
 
         %w(limit from step).each do |method|
