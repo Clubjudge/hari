@@ -28,6 +28,10 @@ module Hari
     node
   end
 
+  def node_key(model)
+    "#{node_type(model)}##{node_id(model)}"
+  end
+
   def node_id(model)
     case model
     when ::String
