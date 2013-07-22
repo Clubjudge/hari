@@ -4,7 +4,7 @@ function _h.sorted_set_fetch_relations_ids(start_node_id, relation, direction, f
   if from == '' then
     return redis.call('zrevrange', key, from, stop)
   else
-    return redis.call('zrevrangebyscore', key, from, '-inf', 'limit', 0, stop)
+    return redis.call('zrevrangebyscore', key, '+inf', from, 'limit', 0, stop)
   end
 end
 

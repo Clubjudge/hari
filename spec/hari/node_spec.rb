@@ -56,7 +56,7 @@ describe Hari::Node do
 
     it 'paginates queries' do
       following = joao.out(:follow).from(15.minutes.ago.to_f).to_a
-      following.map(&:id).sort.should eq [maria, joaquim, lili].map(&:id).sort
+      following.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
     end
 
     it 'paginates chained queries' do
