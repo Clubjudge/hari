@@ -25,7 +25,7 @@ function _h.sorted_set_merge(stream_key, nodes_ids, relation, direction, limit, 
       if from == '' then
         rel_nodes_ids_and_scores = redis.call('zrevrange', key, fetch_start, fetch_count, 'withscores')
       else
-        rel_nodes_ids_and_scores = redis.call('zrevrangebyscore', key, from, '-inf',
+        rel_nodes_ids_and_scores = redis.call('zrevrangebyscore', key, '+inf', from,
           'withscores', 'limit', fetch_start, fetch_count)
       end
 
