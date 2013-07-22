@@ -28,6 +28,8 @@ describe Hari::Node do
       joao.out(:follow).to_a.should eq [lili, raimundo, teresa]
       joao.out(:follow).limit(1).to_a.should eq [lili]
       joao.out(:follow).limit(2).to_a.should eq [lili, raimundo]
+      joao.out(:follow).nodes_ids.to_a.should eq %w(test_node#30 test_node#27 test_node#26)
+      joao.out(:follow).nodes_ids!.should eq %w(test_node#30 test_node#27 test_node#26)
 
       Hari.node(test_node: 25).out(:follow).to_a.should eq [lili, raimundo, teresa]
     end

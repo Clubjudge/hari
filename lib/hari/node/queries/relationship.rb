@@ -45,11 +45,15 @@ module Hari
 
         alias type types
 
-        # TODO also have a custom type resolver that could bring moar complex stuff
-        %w(nodes_ids relations_ids nodes rollup).each do |result_type|
+        %w(nodes_ids relations_ids nodes).each do |result_type|
           define_method result_type do
             options[:result_type] = result_type.to_sym
             self
+          end
+
+          define_method "#{result_type}!" do
+            send result_type
+            result
           end
         end
 
