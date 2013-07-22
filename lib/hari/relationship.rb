@@ -15,11 +15,13 @@ module Hari
     end
 
     def key(direction = nil)
-      case direction
+      case direction.try :to_s
       when nil
         "#{start_node_id}:#{label}:#{end_node_id}"
-      else
-        "#{start_node_id}:#{label}:#{direction}"
+      when 'out'
+        "#{start_node_id}:#{label}:out"
+      when 'in'
+        "#{end_node_id}:#{label}:in"
       end
     end
 
@@ -29,8 +31,8 @@ module Hari
 
     def self.create(label, start_node, end_node, attrs = {})
       attrs = attrs.merge(label: label,
-                          start_node_id: node_id(start_node),
-                          end_node_id:   node_id(end_node))
+                          start_node_id: Hari.node_id(start_node),
+                          end_node_id:   Hari.node_id(end_node))
       new(attrs).save
     end
 
@@ -52,10 +54,6 @@ module Hari
     end
 
     private
-
-    def self.node_id(node)
-      node.kind_of?(::String) ? node : node.try(:id)
-    end
 
     def create
       super
