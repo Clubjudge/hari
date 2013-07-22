@@ -55,10 +55,7 @@ module Hari
   end
 
   def relation!(type, from, target)
-    from_type   = from.class.to_s.underscore
-    target_type = target.class.to_s.underscore
-
-    Relationship.create type, "#{from_type}##{from.id}", "#{target_type}##{target.id}"
+    Relationship.create type, node_key(from), node_key(to)
   end
 
 end
