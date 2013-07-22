@@ -3,7 +3,9 @@
 local <%= l(:result) %> = {}
 
 <% if index == 1 %>
-  <% if result_type == :nodes_ids %>
+  <% if result_type == :count %>
+    <%= l(:result) %> = _h.<%= backend %>_count(start_node_id, <%= l(:relation, :direction) %>, _h)
+  <% elsif result_type == :nodes_ids %>
     <%= l(:result) %> = _h.<%= backend %>_fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :from, :limit) %>, _h)
   <% elsif result_type == :relations_ids %>
     <%= l(:result) %> = _h.<%= backend %>_fetch_relations_ids(start_node_id, <%= l(:relation, :direction, :from, :limit) %>, _h)

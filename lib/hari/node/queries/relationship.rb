@@ -57,6 +57,11 @@ module Hari
         alias rel_ids relations_ids
         alias rids    relations_ids
 
+        def count
+          options[:result_type] = :count
+          result
+        end
+
         def script(result, s = Script.new)
           @script ||= begin
             parent.script(false, s)
