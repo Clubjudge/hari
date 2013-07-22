@@ -32,7 +32,7 @@ module Hari
     if type = node_type(model)
       "#{type}##{node_id(model)}"
     else
-      node_id(model)
+      node_id model
     end
   end
 
