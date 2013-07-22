@@ -55,7 +55,7 @@ module Hari
   end
 
   def relation!(type, from, target)
-    Relationship.create type, node_key(from), node_key(to)
+    Relationship.create type, node_key(from), node_key(target)
   end
 
 end
