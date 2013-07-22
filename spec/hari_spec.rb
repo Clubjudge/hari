@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Hari do
 
-  let(:model) { TestNode.new(id: '1') }
+  let(:model) { TestNode.create name: 'Tom', model_id: '1' }
 
   describe '.node_key' do
     specify { Hari.node_key('user#1').should eq('user#1') }

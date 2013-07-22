@@ -38,6 +38,8 @@ module Hari
       model.split('#').last
     when ::Hash
       model.first[1]
+    when Hari::Node
+      model.model_id
     else
       model.id
     end
@@ -49,6 +51,8 @@ module Hari
       model.split('#').first
     when ::Hash
       model.first[0]
+    when Hari::Node
+      model.node_type
     else
       model.class.to_s.underscore.split('/').last
     end

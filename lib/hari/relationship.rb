@@ -31,8 +31,8 @@ module Hari
 
     def self.create(label, start_node, end_node, attrs = {})
       attrs = attrs.merge(label: label,
-                          start_node_id: Hari.node_id(start_node),
-                          end_node_id:   Hari.node_id(end_node))
+                          start_node_id: Hari.node_key(start_node),
+                          end_node_id:   Hari.node_key(end_node))
       new(attrs).save
     end
 
