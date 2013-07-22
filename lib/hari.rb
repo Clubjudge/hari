@@ -29,7 +29,11 @@ module Hari
   end
 
   def node_key(model)
-    "#{node_type(model)}##{node_id(model)}"
+    if type = node_type(model)
+      "#{type}##{node_id(model)}"
+    else
+      node_id(model)
+    end
   end
 
   def node_id(model)
@@ -53,6 +57,8 @@ module Hari
       model.first[0]
     when Hari::Node
       model.node_type
+    when Hari::Entity
+      nil
     else
       model.class.to_s.underscore.split('/').last
     end
