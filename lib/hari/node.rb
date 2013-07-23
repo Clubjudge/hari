@@ -1,7 +1,8 @@
-require 'hari/node/queries/step'
-require 'hari/node/queries/start'
-require 'hari/node/queries/runnable'
-require 'hari/node/queries/relationship'
+require 'hari/node/queries/relation/step'
+require 'hari/node/queries/relation/start'
+require 'hari/node/queries/relation/runnable'
+require 'hari/node/queries/relation/relationship'
+require 'hari/node/queries/set'
 require 'hari/node/queries'
 require 'hari/node/serialization'
 
