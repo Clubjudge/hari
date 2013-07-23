@@ -31,6 +31,8 @@ describe Hari::Node do
       joao.out(:follow).nodes_ids.to_a.should eq %w(test_node#30 test_node#27 test_node#26)
       joao.out(:follow).nodes_ids!.should eq %w(test_node#30 test_node#27 test_node#26)
 
+      lili.out(:follow).nodes!.should eq []
+
       Hari.node(test_node: 25).out(:follow).to_a.should eq [lili, raimundo, teresa]
     end
 
@@ -65,6 +67,7 @@ describe Hari::Node do
       following = teresa.out(:follow).out(:follow).from(15.minutes.ago.to_f)
       following.to_a.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
       following.nodes!.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
+
     end
   end
 end

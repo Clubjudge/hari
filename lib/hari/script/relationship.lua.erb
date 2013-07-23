@@ -12,7 +12,10 @@ local <%= l(:result) %> = {}
   <% elsif result_type == :nodes %>
     <%= l(:result) %> = _h.<%= backend %>_fetch_nodes_ids(start_node_id, <%= l(:relation, :direction, :from, :limit) %>, _h)
     <%= l(:result) %> = _h.map(<%= l(:result) %>, function(r) return 'hari:'..r end)
-    <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
+
+    if #<%= l(:result) %> > 0 then
+      <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
+    end
   <% end %>
 <% else %>
   <%= l(:result) %> = _h.<%= backend %>_merge('<%= SecureRandom.hex(6) %>', <%= l(:result, index: (index - 1)) %>, <%= l(:relation, :direction, :limit, :from, :step, :result_type) %>, _h)
