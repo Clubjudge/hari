@@ -1,3 +1,4 @@
+require 'hari/node/repository'
 require 'hari/node/queries/relation/step'
 require 'hari/node/queries/relation/start'
 require 'hari/node/queries/relation/runnable'
@@ -9,6 +10,7 @@ require 'hari/node/serialization'
 module Hari
   class Node < Entity
     include Hari::Node::Queries
+    include Hari::Node::Repository
     extend  Hari::Node::Serialization
 
     property :model_id
@@ -25,7 +27,11 @@ module Hari
     end
 
     def node_type
-      @node_type || self.class.to_s.underscore
+      @node_type || self.class.node_type
+    end
+
+    def self.node_type
+      self.to_s.underscore
     end
 
   end

@@ -12,6 +12,13 @@ describe Hari::Node do
     Hari.redis.flushdb
   end
 
+  specify 'find' do
+    joao.name.should eq('Joao')
+    TestNode.find('test_node#25').name.should eq('Joao')
+    TestNode.find(25).name.should eq('Joao')
+    TestNode.find('25').name.should eq('Joao')
+  end
+
   describe 'queries' do
     before do
       Hari::Relationship.create :follow, joao, teresa
