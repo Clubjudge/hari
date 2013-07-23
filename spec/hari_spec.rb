@@ -22,4 +22,16 @@ describe Hari do
     specify { Hari.node_type(model).should eq('test_node') }
   end
 
+  specify '.node' do
+    node = Hari.node(user: 1)
+
+    node.model_id.should eq(1)
+    node.node_type.should eq('user')
+
+    node = Hari(user: 1)
+
+    node.model_id.should eq(1)
+    node.node_type.should eq('user')
+  end
+
 end

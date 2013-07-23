@@ -24,7 +24,7 @@ module Hari
   def node(arg)
     type, id = node_type(arg), node_id(arg)
     node = Node.new(model_id: id)
-    node.instance_variable_set '@node_type', type
+    node.instance_variable_set '@node_type', type.to_s
     node
   end
 
@@ -68,4 +68,8 @@ module Hari
     Relationship.create type, from, target
   end
 
+end
+
+def Hari(arg)
+  Hari.node arg
 end
