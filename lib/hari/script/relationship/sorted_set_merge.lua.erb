@@ -38,15 +38,11 @@ function _h.sorted_set_merge(stream_key, nodes_ids, relation, direction, limit, 
       end
 
       if prune then
-        redis.log(redis.LOG_NOTICE, 'prune yes')
         redis.call('zremrangebyrank', stream_key, 0, fetch_count)
 
         local last_node_present = redis.call('zrank', stream_key, last_node_id)
 
-        redis.log(redis.LOG_NOTICE, last_node_present[1])
-
         if last_node_present == false then
-          redis.log(redis.LOG_NOTICE, 'digg is going false')
           digg = false
           fetch_start = fetch_start + fetch_count + 1
         end
