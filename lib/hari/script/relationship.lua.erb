@@ -20,10 +20,10 @@ local <%= l(:result) %> = {}
 <% else %>
   <%= l(:result) %> = _h.<%= backend %>_merge('<%= SecureRandom.hex(6) %>', <%= l(:result, index: (index - 1)) %>, <%= l(:relation, :direction, :limit, :from, :step, :result_type) %>, _h)
 
-  _h.map(<%= l(:result) %>, function(r) redis.log(redis.LOG_NOTICE, 'result:'..r) end)
-
   <% if result_type == :nodes %>
-    <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
+    if #<%= l(:result) %> > 0 then
+      <%= l(:result) %> = redis.call('mget', unpack(<%= l(:result) %>))
+    end
   <% end %>
 <% end %>
 
