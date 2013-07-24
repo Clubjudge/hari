@@ -92,10 +92,14 @@ module Hari
         end
 
         def include?(member)
-          Hari.redis.zscore(key, member).present?
+          score(member).present?
         end
 
         alias :member? :include?
+
+        def score(member)
+          Hari.redis.zscore key, member
+        end
 
         def add(*score_members)
           Hari.redis.zadd key, score_members.to_a.flatten
