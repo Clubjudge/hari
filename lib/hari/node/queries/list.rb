@@ -35,6 +35,14 @@ module Hari
           end
         end
 
+        def first
+          self[0]
+        end
+
+        def last
+          self[-1]
+        end
+
         def []=(index, member)
           Hari.redis.lset key, index, member
         end
@@ -43,13 +51,15 @@ module Hari
           Hari.redis.lrange key, start, stop
         end
 
+        alias :members :range
+
         def at(index)
           Hari.redis.lindex key, index
         end
 
         alias :index :at
 
-        def trim(start = 0, stop = -1)
+        def trim(start, stop)
           Hari.redis.ltrim key, start, stop
         end
 
@@ -83,6 +93,7 @@ module Hari
         end
 
         alias :rpush :push
+        alias :add   :push
 
         def lpush(*members)
           Hari.redis.lpush key, members

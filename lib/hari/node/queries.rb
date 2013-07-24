@@ -23,6 +23,10 @@ module Hari
         Queries::SortedSet.new self
       end
 
+      def list_query
+        Queries::List.new self
+      end
+
       def relation_query
         Queries::Relation::Start.new self
       end
