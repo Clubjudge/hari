@@ -3,10 +3,6 @@ module Hari
     module SortedSet
       extend self
 
-      def type
-        :ss
-      end
-
       def create(rel)
         %w(in out).each { |d| Hari.redis.zadd rel.key(d), rel.weight(d), rel.id }
       end
