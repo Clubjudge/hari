@@ -1,9 +1,4 @@
 require 'hari/node/repository'
-require 'hari/node/queries/relation/step'
-require 'hari/node/queries/relation/start'
-require 'hari/node/queries/relation/runnable'
-require 'hari/node/queries/relation/relationship'
-require 'hari/node/queries/set'
 require 'hari/node/queries'
 require 'hari/node/serialization'
 

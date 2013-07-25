@@ -3,23 +3,23 @@ module Hari
     module Queries
       class Set
 
-        attr_reader :node, :set_name
+        attr_reader :node, :name
 
         def initialize(node)
           @node = node
         end
 
         def key
-          "#{Hari.node_key(node)}:#{set_name}"
+          @key ||= "#{Hari.node_key(node)}:#{name}"
         end
 
         def set(name)
-          @set_name = name
+          @name = name
           self
         end
 
         def set!(name)
-          @set_name = name
+          @name = name
           members
         end
 
@@ -38,9 +38,23 @@ module Hari
         alias :size :count
         alias :length :count
 
+        def empty?
+          count == 0
+        end
+
+        def one?
+          count == 1
+        end
+
+        def many?
+          count > 1
+        end
+
         def include?(member)
           Hari.redis.sismember key, member
         end
+
+        alias :member? :include?
 
         def add(*members)
           Hari.redis.sadd key, members
