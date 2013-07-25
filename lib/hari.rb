@@ -15,7 +15,6 @@ require 'hari/errors'
 require 'hari/entity'
 require 'hari/node'
 require 'hari/relationship'
-require 'hari/script'
 
 module Hari
   extend self

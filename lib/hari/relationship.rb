@@ -26,7 +26,7 @@ module Hari
     end
 
     def generate_id
-      "rel:#{start_node_id}:#{end_node_id}:#{backend.type}:#{SecureRandom.hex(3)}"
+      "rel:#{start_node_id}:#{end_node_id}:#{SecureRandom.hex(3)}"
     end
 
     def self.create(label, start_node, end_node, attrs = {})

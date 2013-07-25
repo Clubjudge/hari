@@ -3,10 +3,6 @@ module Hari
     module LinkedList
       extend self
 
-      def type
-        :ll
-      end
-
       def create(rel)
         %w(in out).each { |d| Hari.redis.lpush rel.key(d), rel.id }
       end
