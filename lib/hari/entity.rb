@@ -33,26 +33,23 @@ module Hari
       end
     end
 
-    alias attribute send
-    alias read_attribute send
+    alias :attribute :send
+    alias :read_attribute :send
+    alias :has_attribute? :respond_to?
 
     def write_attribute(name, value)
       send "#{name}=", value
     end
 
-    def has_attribute?(name)
-      respond_to? name
-    end
-
     def ==(other)
-      other.is_a?(Hari::Entity) && self.id == other.id
+      other.is_a?(Hari::Entity) && id == other.id
     end
 
     def new?
-      self.id.nil?
+      id.nil?
     end
 
-    alias new_record? new?
+    alias :new_record? :new?
 
     def persisted?
       not new?
@@ -63,7 +60,7 @@ module Hari
     end
 
     def generate_id
-      'ent' + ::Time.now.strftime('%Y%m%d%H%M%S') + SecureRandom.hex(3)
+      '_e' + ::Time.now.strftime('%Y%m%d%H%M%S') + SecureRandom.hex(3)
     end
 
     def to_s

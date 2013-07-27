@@ -7,7 +7,7 @@ module Hari
         run_callbacks(:save) { new? ? create : update }
       end
 
-      alias save create_or_update
+      alias :save :create_or_update
 
       def create
         run_callbacks :create do
@@ -46,7 +46,7 @@ module Hari
         self
       end
 
-      alias destroy delete
+      alias :destroy :delete
 
       module ClassMethods
 
