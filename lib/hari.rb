@@ -14,7 +14,7 @@ require 'hari/configuration'
 require 'hari/errors'
 require 'hari/entity'
 require 'hari/node'
-require 'hari/relationship'
+require 'hari/relation'
 
 module Hari
   extend self
@@ -64,7 +64,7 @@ module Hari
   end
 
   def relation!(type, from, target)
-    Relationship.create type, from, target
+    Relation.create type, from, target
   end
 
 end

@@ -1,5 +1,5 @@
 module Hari
-  class Relationship < Entity
+  class Relation < Entity
     module LinkedList
       extend self
 

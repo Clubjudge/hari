@@ -18,13 +18,15 @@ describe Hari::Node do
 
   describe 'queries' do
     before do
-      Hari::Relationship.create :follow, joao, teresa
-      Hari::Relationship.create :follow, joao, raimundo
-      Hari::Relationship.create :follow, joao, lili
-      Hari::Relationship.create :follow, teresa,   raimundo
-      Hari::Relationship.create :follow, teresa,   maria
-      Hari::Relationship.create :follow, raimundo, maria
-      Hari::Relationship.create :follow, raimundo, joaquim
+      Hari.relation! :follow, joao, teresa
+      Hari.relation! :follow, joao, raimundo
+      Hari.relation! :follow, joao, lili
+
+      Hari.relation! :follow, teresa, raimundo
+      Hari.relation! :follow, teresa, maria
+
+      Hari.relation! :follow, raimundo, maria
+      Hari.relation! :follow, raimundo, joaquim
     end
 
     it 'can has queries' do
@@ -53,7 +55,7 @@ describe Hari::Node do
 
       followings.each do |following|
         Delorean.time_travel_to x.minutes.ago do
-          Hari::Relationship.create :follow, joao, following
+          Hari.relation! :follow, joao, following
         end
 
         x += 5
@@ -66,7 +68,7 @@ describe Hari::Node do
     end
 
     it 'paginates chained queries' do
-      Hari::Relationship.create :follow, teresa, joao
+      Hari.relation! :follow, teresa, joao
 
       following = teresa.out(:follow).out(:follow).from(15.minutes.ago.to_f)
       following.to_a.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
