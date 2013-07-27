@@ -19,7 +19,7 @@ class Hari::Node::Queries::Relation
       end
 
       def fetch_nodes_ids(set, options)
-        index = set.name =~ /in$/ ? 1 : 2
+        index = set.name =~ /in$/ ? 0 : 2
         fetch_relations_ids(set, options).map { |r| r.split(':')[index] }
       end
 
@@ -34,7 +34,7 @@ class Hari::Node::Queries::Relation
 
       def step(start_node, nodes_ids, options = {})
         stream    = start_node.sorted_set("stream:#{SecureRandom.hex(6)}")
-        direction = options[:direction] == :in ? 1 : 2
+        direction = options[:direction] == :in ? 0 : 2
         limit     = options.fetch(:limit, -1)
 
         nodes_ids.each_with_index do |node_id, index|
