@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe Hari::Node::Queries::SortedSet do
 
-  before { Hari.redis.flushdb }
-
   let(:node) { Hari.node user: 10 }
   subject    { node.sorted_set :friends }
 

@@ -1,16 +1,13 @@
 require 'spec_helper'
 
 describe Hari::Node do
+
   let(:joao)     { TestNode.create name: 'Joao',     model_id: 25 }
   let(:teresa)   { TestNode.create name: 'Teresa',   model_id: 26 }
   let(:raimundo) { TestNode.create name: 'Raimundo', model_id: 27 }
   let(:maria)    { TestNode.create name: 'Maria',    model_id: 28 }
   let(:joaquim)  { TestNode.create name: 'Joaquim',  model_id: 29 }
   let(:lili)     { TestNode.create name: 'Lili',     model_id: 30 }
-
-  before do
-    Hari.redis.flushdb
-  end
 
   specify 'find' do
     joao.name.should eq('Joao')
@@ -74,7 +71,7 @@ describe Hari::Node do
       following = teresa.out(:follow).out(:follow).from(15.minutes.ago.to_f)
       following.to_a.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
       following.nodes!.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
-
     end
   end
+
 end

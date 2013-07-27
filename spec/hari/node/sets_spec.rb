@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe Hari::Node::Queries::Set do
 
-  before { Hari.redis.flushdb }
-
   let(:node) { Hari.node user: 10 }
   subject    { node.set :friends }
 

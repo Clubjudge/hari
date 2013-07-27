@@ -14,3 +14,7 @@ end
 class TestNode < Hari::Node
   property :name
 end
+
+RSpec.configure do |config|
+  config.before(:each) { Hari.redis.flushdb }
+end
