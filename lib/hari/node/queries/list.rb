@@ -57,6 +57,14 @@ module Hari
         alias :members :range
         alias :to_a    :range
 
+        def from(index)
+          range index
+        end
+
+        def to(index)
+          range 0, index
+        end
+
         def at(index)
           Hari.redis.lindex key, index
         end

@@ -11,7 +11,9 @@ describe Hari::Node::Queries::List do
     subject.name.should eq(:friends)
   end
 
-  specify '#range + #members + #list! + #[i] + #[i, j], + #[i..j] + #at + #index' do
+  specify '#range + #members + #list! + ' +
+          '#[i] + #[i, j], + #[i..j] + ' +
+          '#at + #index + #from + #to' do
     node.list!(:friends).should eq %w(10 20 30 40 50 60)
     subject.members.should eq %w(10 20 30 40 50 60)
     subject.range.should eq %w(10 20 30 40 50 60)
@@ -20,8 +22,11 @@ describe Hari::Node::Queries::List do
     subject[1, 3].should eq %w(20 30 40)
     subject[1..3].should eq %w(20 30 40)
     subject[1].should eq('20')
+
     subject.at(1).should eq('20')
     subject.index(1).should eq('20')
+    subject.from(2).should eq %w(30 40 50 60)
+    subject.to(3).should eq %w(10 20 30 40)
   end
 
   specify '#include? + #member?' do
