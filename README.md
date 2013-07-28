@@ -2,7 +2,7 @@
 
 ## hari
 
-Hari is a library to persist and get nodes and its relations in Redis, using different Redis data structures depending on your need.
+Hari is a library to persist and get nodes and its relations in Redis, using different data structures depending on your need.
 
     Hari(user: 23).out(:follow).out(:activity).limit(25)
 
@@ -19,3 +19,4 @@ Creating a relation can be as simple as:
     - objects with #id method (node representation will be class#id, like user#23)
     - strings with node_type#node_id
     - hash like { node_type => node_id }
+    - a Hari::Node instance
