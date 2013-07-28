@@ -1,7 +1,21 @@
-[![Build Status](https://travis-ci.org/rodrigues/hari.png?branch=master)](https://travis-ci.org/rodrigues/hari)
+[![Build Status](https://travis-ci.org/Clubjudge/hari.png?branch=master)](https://travis-ci.org/Clubjudge/hari)
 
 ## hari
 
-Hari is a Ruby gem to persist nodes and it's relations in Redis, graph-wise, and generates Lua scripts to make fast queries to the graph, things like this one:
+Hari is a library to persist and get nodes and its relations in Redis, using different Redis data structures depending on your need.
 
-    Hari.node(user: 23).out(:follow).out(:activity).limit(25)
+    Hari(user: 23).out(:follow).out(:activity).limit(25)
+
+The query above will return the top `25` activities from all nodes user `23` follows.
+
+### Relations
+
+Creating a relation can be as simple as:
+
+    Hari.relation! :follow, user, event
+
+    # where user / event are:
+
+    - objects with #id method (node representation will be class#id, like user#23)
+    - strings with node_type#node_id
+    - hash like { node_type => node_id }
