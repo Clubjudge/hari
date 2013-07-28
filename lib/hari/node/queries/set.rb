@@ -5,12 +5,15 @@ module Hari
 
         attr_reader :node, :name
 
-        def initialize(node)
+        def initialize(node = nil)
           @node = node
         end
 
         def key
-          @key ||= "#{Hari.node_key(node)}:#{name}"
+          @key ||= begin
+            prefix = node ? "#{Hari.node_key(node)}:" : ''
+            prefix + name.to_s
+          end
         end
 
         def set(name)
