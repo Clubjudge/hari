@@ -38,8 +38,8 @@ module Hari
 
   def node_id(model)
     case model
-    when ::String
-      model.split('#').last
+    when ::String, ::Symbol
+      model.to_s.split('#').last
     when ::Hash
       model.first[1]
     when Hari::Node
@@ -51,8 +51,8 @@ module Hari
 
   def node_type(model)
     case model
-    when ::String
-      model.split('#').first
+    when ::String, ::Symbol
+      model.to_s.split('#').first
     when ::Hash
       model.first[0]
     when Hari::Node
