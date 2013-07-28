@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.author        = 'Victor Rodrigues'
   s.email         = 'victorc.rodrigues@gmail.com'
-  s.homepage      = 'http://github.com/rodrigues/hari'
+  s.homepage      = 'http://github.com/Clubjudge/hari'
 
   s.license       = 'MIT'
 
