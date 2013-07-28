@@ -19,6 +19,7 @@ require 'hari/relation'
 module Hari
   extend self
   extend Configuration
+  extend Hari::Node::Queries
 
   def node(arg)
     type, id = node_type(arg), node_id(arg)
