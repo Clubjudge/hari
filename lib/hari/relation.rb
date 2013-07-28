@@ -4,6 +4,8 @@ require 'hari/relation/sorted_set'
 module Hari
   class Relation < Entity
 
+    DIRECTIONS = %w(in out)
+
     attr_accessor :label, :start_node_id, :end_node_id
 
     validates :label, :start_node_id, :end_node_id, presence: true
