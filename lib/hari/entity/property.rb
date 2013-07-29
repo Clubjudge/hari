@@ -1,8 +1,7 @@
-require 'hari/entity/property/builder'
-
 module Hari
   class Entity
     class Property
+      autoload :Builder, 'hari/entity/property/builder'
 
       attr_accessor :name, :serializer, :options
 

@@ -1,6 +1,3 @@
-require 'hari/node/queries/list'
-require 'hari/node/queries/set'
-require 'hari/node/queries/sorted_set'
 require 'hari/node/queries/relation'
 
 module Hari
@@ -16,15 +13,15 @@ module Hari
       private
 
       def set_query
-        Queries::Set.new query_node
+        Keys::Set.new query_node
       end
 
       def sorted_set_query
-        Queries::SortedSet.new query_node
+        Keys::SortedSet.new query_node
       end
 
       def list_query
-        Queries::List.new query_node
+        Keys::List.new query_node
       end
 
       def relation_query

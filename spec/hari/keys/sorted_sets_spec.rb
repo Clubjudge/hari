@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hari::Node::Queries::SortedSet do
+describe Hari::Keys::SortedSet do
 
   let(:node) { Hari.node user: 10 }
   subject    { node.sorted_set :friends }

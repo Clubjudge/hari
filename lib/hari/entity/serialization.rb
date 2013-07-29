@@ -1,15 +1,15 @@
-require 'hari/entity/serialization/boolean'
-require 'hari/entity/serialization/date'
-require 'hari/entity/serialization/datetime'
-require 'hari/entity/serialization/float'
-require 'hari/entity/serialization/integer'
-require 'hari/entity/serialization/string'
-require 'hari/entity/serialization/time'
-
 module Hari
   class Entity
     module Serialization
       extend ActiveSupport::Concern
+
+      autoload :Boolean,  'hari/entity/serialization/boolean'
+      autoload :Date,     'hari/entity/serialization/date'
+      autoload :DateTime, 'hari/entity/serialization/datetime'
+      autoload :Float,    'hari/entity/serialization/float'
+      autoload :Integer,  'hari/entity/serialization/integer'
+      autoload :String,   'hari/entity/serialization/string'
+      autoload :Time,     'hari/entity/serialization/time'
 
       def to_json
         hash = self.class.properties.inject({}) do |buffer, prop|

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Hari::Node::Queries::List do
+describe Hari::Keys::List do
 
   let(:node) { Hari.node user: 10 }
   subject    { node.list :friends }

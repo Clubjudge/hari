@@ -12,12 +12,15 @@ require 'ostruct'
 require 'hari/version'
 require 'hari/configuration'
 require 'hari/errors'
-require 'hari/entity'
-require 'hari/node'
-require 'hari/relation'
 
 module Hari
   extend self
+
+  autoload :Entity,   'hari/entity'
+  autoload :Keys,     'hari/keys'
+  autoload :Node,     'hari/node'
+  autoload :Relation, 'hari/relation'
+
   extend Configuration
   extend Hari::Node::Queries
 

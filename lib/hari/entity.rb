@@ -7,6 +7,11 @@ module Hari
     extend  ActiveModel::Naming
     extend  ActiveModel::Callbacks
     include ActiveModel::Validations
+
+    autoload :Property,      'hari/entity/property'
+    autoload :Repository,    'hari/entity/property'
+    autoload :Serialization, 'hari/entity/property'
+
     extend  Property::Builder
     include Repository
     include Serialization
