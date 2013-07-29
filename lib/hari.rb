@@ -71,6 +71,10 @@ module Hari
     Relation.create type, from, target
   end
 
+  def remove_relation!(type, from, target)
+    relation!(type, from, target).delete
+  end
+
 end
 
 def Hari(arg)

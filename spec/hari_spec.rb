@@ -34,4 +34,17 @@ describe Hari do
     node.node_type.should eq('user')
   end
 
+  specify '.relation!' do
+    Hari.relation! :follow, 'user#1', 'user#2'
+
+    Hari(user: 1).out(:follow).nodes_ids!.should eq %w(user#2)
+  end
+
+  specify '.remove_relation!' do
+    Hari.relation! :follow, 'user#6', 'user#9'
+    Hari.remove_relation! :follow, 'user#6', 'user#9'
+
+    Hari(user: 1).out(:follow).nodes_ids!.should be_empty
+  end
+
 end

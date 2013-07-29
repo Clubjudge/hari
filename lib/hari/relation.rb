@@ -54,8 +54,6 @@ module Hari
       ::Time.now.to_f
     end
 
-    private
-
     def create
       super
       backend.create self
