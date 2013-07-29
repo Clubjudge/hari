@@ -36,14 +36,6 @@ module Hari
           end
         end
 
-        # TODO for later, filter by node type
-        def types(*types)
-          options[:types] = types
-          self
-        end
-
-        alias :type :types
-
         %w(nodes_ids relations_ids nodes).each do |result_type|
           define_method result_type do
             options[:result_type] = result_type.to_sym
