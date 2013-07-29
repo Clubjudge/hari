@@ -1,4 +1,3 @@
-require 'hari/relation/linked_list'
 require 'hari/relation/sorted_set'
 
 module Hari
