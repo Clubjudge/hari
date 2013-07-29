@@ -29,11 +29,16 @@ module Hari
           options[:limit] ? (options[:limit].to_i - 1) : -1
         end
 
-        %w(limit from step).each do |method|
+        %w(limit step).each do |method|
           define_method method do |value|
             options[method.to_sym] = value
             self
           end
+        end
+
+        def from(score, direction = 'up')
+          options[:from] = { score: score, direction: direction }
+          self
         end
 
         %w(nodes_ids relations_ids nodes).each do |result_type|

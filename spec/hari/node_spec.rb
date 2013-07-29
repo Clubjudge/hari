@@ -65,6 +65,9 @@ describe Hari::Node do
     it 'paginates queries' do
       following = joao.out(:follow).from(15.minutes.ago.to_f).to_a
       following.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
+
+      following = joao.out(:follow).from(15.minutes.ago.to_f, 'down').to_a
+      following.map(&:id).sort.should eq [maria, joaquim, lili].map(&:id).sort
     end
 
     it 'paginates chained queries' do
@@ -73,6 +76,9 @@ describe Hari::Node do
       following = teresa.out(:follow).out(:follow).from(15.minutes.ago.to_f)
       following.to_a.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
       following.nodes!.map(&:id).sort.should eq [teresa, raimundo].map(&:id).sort
+
+      following = teresa.out(:follow).out(:follow).from(15.minutes.ago.to_f, 'down')
+      following.to_a.map(&:id).sort.should eq [maria, joaquim, lili].map(&:id).sort
     end
   end
 

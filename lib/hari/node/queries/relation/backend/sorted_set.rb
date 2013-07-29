@@ -11,8 +11,10 @@ class Hari::Node::Queries::Relation
       def fetch_relations_ids(set, options)
         from, limit = options.values_at(:from, :limit)
 
-        if from.present?
-          set.range_by_score from, '+inf', desc: true, limit: [0, limit]
+        if from.present? && from[:direction] == 'up'
+          set.range_by_score from[:score], '+inf', desc: true, limit: [0, limit]
+        elsif from.present? && from[:direction] == 'down'
+          set.range_by_score '-inf', from[:score], desc: true, limit: [0, limit]
         else
           set.range from, limit, desc: true
         end
@@ -50,7 +52,13 @@ class Hari::Node::Queries::Relation
             set = Hari(node_id).sorted_set set_name(options)
 
             if from = options[:from].presence
-              scored_relations_ids = set.range_by_score(from, '+inf', desc: true, with_scores: true, limit: [start, stop])
+              args = { desc: true, with_scores: true, limit: [start, stop] }
+
+              if from[:direction] == 'up'
+                scored_relations_ids = set.range_by_score(from[:score], '+inf', args)
+              elsif from[:direction] == 'down'
+                scored_relations_ids = set.range_by_score('-inf', from[:score], args)
+              end
             else
               scored_relations_ids = set.range(start, stop, desc: true, with_scores: true)
             end
