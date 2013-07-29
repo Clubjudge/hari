@@ -36,8 +36,9 @@ module Hari
           end
         end
 
-        def from(score, direction = 'up')
-          options[:from] = { score: score, direction: direction }
+        def from(score, direction = nil)
+          direction ||= :up
+          options[:from] = { score: score, direction: direction.to_s }
           self
         end
 
