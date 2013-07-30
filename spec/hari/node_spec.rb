@@ -82,4 +82,35 @@ describe Hari::Node do
     end
   end
 
+  describe 'queries by type' do
+    before do
+      Hari.relation! :follow, 'user#1', 'celeb#x'
+      Hari.relation! :follow, 'user#2', 'user#1'
+    end
+
+    it 'can intersect type queries' do
+      friends = Hari('user#2').out(:follow).type(:user)
+      fans    = Hari('celeb#x').in(:follow).type(:user)
+
+      fans.intersect_count(friends).should eq(1)
+      friends.intersect_count(fans).should eq(1)
+
+      fans.intersect(friends).should eq %w(1)
+
+      Hari.relation! :follow, 'user#3', 'celeb#x'
+      Hari.relation! :follow, 'user#4', 'celeb#x'
+      Hari.relation! :follow, 'user#5', 'celeb#x'
+      Hari.relation! :follow, 'user#6', 'celeb#x'
+      Hari.relation! :follow, 'user#7', 'celeb#x'
+
+      Hari.relation! :follow, 'user#2', 'user#3'
+      Hari.relation! :follow, 'user#2', 'user#4'
+      Hari.relation! :follow, 'user#2', 'user#5'
+      Hari.relation! :follow, 'user#2', 'user#6'
+      Hari.relation! :follow, 'user#2', 'user#7'
+
+      fans.intersect(friends, 1, 3).should eq %w(6 5 4)
+    end
+  end
+
 end

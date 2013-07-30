@@ -1,8 +1,8 @@
-require 'hari/node/queries/relation'
-
 module Hari
   class Node < Entity
     module Queries
+      autoload :Relation, 'hari/node/queries/relation'
+      autoload :Type,     'hari/node/queries/type'
 
       delegate :in, :out, to: :relation_query
 

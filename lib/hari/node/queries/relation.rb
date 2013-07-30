@@ -12,6 +12,8 @@ module Hari
 
         attr_reader :parent, :direction, :relation, :level, :options
 
+        alias :name :relation
+
         def initialize(parent, direction, relation, *args)
           @parent, @direction, @relation = parent, direction, relation
           @level = parent.level + 1
@@ -57,6 +59,12 @@ module Hari
         alias :nids    :nodes_ids
         alias :rel_ids :relations_ids
         alias :rids    :relations_ids
+
+        def type(name)
+          fail 'type not supported for chained queries' if level > 1
+
+          Type.new self, name
+        end
 
         def count
           options[:result_type] = :count
