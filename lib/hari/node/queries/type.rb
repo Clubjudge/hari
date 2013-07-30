@@ -28,11 +28,12 @@ module Hari
           end
         end
 
-        def sort_by(type, offset = nil, count = nil)
+        def sort_by(type, offset = nil, count = nil, order = nil)
           offset ||= 0
           count  ||= Hari.redis.zcard(key)
+          order  = 'desc' unless order.to_s == 'asc'
 
-          Hari.redis.sort key, by: type.sort_key, order: 'desc alpha', limit: [offset, count]
+          Hari.redis.sort key, by: type.sort_key, order: "#{order} alpha", limit: [offset, count]
         end
 
         def interstore(type)
