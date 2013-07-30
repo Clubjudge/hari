@@ -102,14 +102,16 @@ describe Hari::Node do
       Hari.relation! :follow, 'user#5', 'celeb#x'
       Hari.relation! :follow, 'user#6', 'celeb#x'
       Hari.relation! :follow, 'user#7', 'celeb#x'
+      Hari.relation! :follow, 'user#8', 'celeb#x'
 
-      Hari.relation! :follow, 'user#2', 'user#3'
       Hari.relation! :follow, 'user#2', 'user#4'
       Hari.relation! :follow, 'user#2', 'user#5'
       Hari.relation! :follow, 'user#2', 'user#6'
       Hari.relation! :follow, 'user#2', 'user#7'
 
       fans.intersect(friends, 1, 3).should eq %w(6 5 4)
+
+      fans.sort_by(friends).should eq %w(7 6 5 4 1 3 8)
     end
   end
 

@@ -10,24 +10,45 @@ module Hari
         end
 
         def intersect_count(type)
-          Hari.redis.zcard interstore(type)
+          intersect_key = interstore(type)
+
+          Hari.redis.zcard(intersect_key).tap do
+            Hari.redis.del intersect_key
+          end
         end
 
         def intersect(type, start = nil, stop = nil)
           start ||= 0
           stop  ||= -1
-          Hari.redis.zrevrange interstore(type), start, stop
+
+          intersect_key = interstore(type)
+
+          Hari.redis.zrevrange(intersect_key, start, stop).tap do
+            Hari.redis.del intersect_key
+          end
+        end
+
+        def sort_by(type, offset = nil, count = nil)
+          offset ||= 0
+          count  ||= Hari.redis.zcard(key)
+
+          Hari.redis.sort key, by: type.sort_key, order: 'desc alpha', limit: [offset, count]
         end
 
         def interstore(type)
-          destination = intersect_key(type)
-          Hari.redis.zinterstore destination, [key, type.key]
-          destination
+          intersect_key(type).tap do |destination|
+            Hari.redis.zinterstore destination, [key, type.key]
+          end
         end
 
         def key
           start_key = Hari.node_key(relation.parent.node)
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"
+        end
+
+        def sort_key
+          start_key = Hari.node_key(relation.parent.node)
+          "#{start_key}:#{relation.name}:#{name}#*"
         end
 
         def intersect_key(type)
