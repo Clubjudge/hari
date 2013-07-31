@@ -2,7 +2,7 @@
 
 ## hari
 
-Hari is a gem to make easier for objects handle their Redis' [`lists`](https://github.com/Clubjudge/hari#lists), [`sets`](https://github.com/Clubjudge/hari#sets), [`sorted_sets`](https://github.com/Clubjudge/hari#sorted_sets) and [**relations**](https://github.com/Clubjudge/hari#relations).
+Hari is a gem to make easier for objects handle their Redis' [lists](https://github.com/Clubjudge/hari#lists), [sets](https://github.com/Clubjudge/hari#sets), [sorted sets](https://github.com/Clubjudge/hari#sorted_sets) and [**relations**](https://github.com/Clubjudge/hari#relations). You can also store the [**nodes**](https://github.com/Clubjudge/hari#nodes) in Redis if you wish.
 
 ```ruby
 user = User.new(id: 20)
@@ -35,7 +35,16 @@ Hari(user: 30)
 
 ### Sorted Sets
 
+### Nodes
+
 ### Relations
+
+`Hari` uses the power of Redis data structures to create relations between nodes, allowing you to traverse nodes and its relations like a graph, doing something like:
+
+```ruby
+# this gets the last 20 comments from the entities the user#1 follows
+Hari(user: 1).out(:follow).out(:comments).limit(20)
+```
 
 Creating a relation can be as simple as:
 
