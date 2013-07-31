@@ -2,13 +2,32 @@
 
 ## hari
 
-Hari is a library to persist and get nodes and its relations in Redis, using different data structures depending on your need.
+Hari is a ruby gem made to make easier to persist and get objects and its `lists`, `sets`, `sorted sets` and **relations** in Redis.
 
 ```ruby
-Hari(user: 23).out(:follow).out(:activity).limit(25)
+user = User.new(id: 20)
+
+Hari(user).set(:friends_ids) << 10   # REDIS: SADD hari:user#20:friends_ids 10
 ```
 
-The query above will return the top `25` activities from all nodes user `23` follows.
+### The `Hari()` wrapper
+
+It returns a `Hari::Node` representation of the object passed. You can do:
+
+```ruby
+class User
+  attr_reader :id   # might be an ActiveRecord::Base or whatever object responds to #id
+end
+
+user = User.find(20)
+
+# all examples below work
+Hari(user)
+Hari('user#30')
+Hari(user: 30)
+
+=> #<Hari::Node:0x007f90f2a9d460 @model_id=1, @node_type="user">
+```
 
 ### Relations
 
@@ -17,8 +36,6 @@ Creating a relation can be as simple as:
 ```ruby
 Hari.relation! :follow, user, event
 ```
-
-<sub>Both `user` and `event` can be a `Hari::Node` instance, an `ActiveRecord::Base` model or any object that responds to the `#id` method. Also a `"user#1"` string representation or a hash { user: 1 } are accepted, as just the model type and id are needed for this operation.</sub>
 
 To remove a relation, do:
 
@@ -33,8 +50,6 @@ Hari(event).in(:follow).nodes
 ```
 
 The above query will return a query object (lazy evaluation). To return the actual data, you need to call `to_a`, or `nodes!`.
-
-The `Hari()` method works as a wrapper to convert objects (`User<ActiveRecord::Base`, `'user#1'`, `{user: 1}`, etc) into a queryable `Hari::Node`.
 
 If you just want the nodes ids, not the node instances, you can do:
 
