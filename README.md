@@ -51,26 +51,19 @@ You get all the members in this list insted. Let's go to the operations you can 
 
 comments = Hari('user#42').list(:comments)
 
-comments.count                                              # redis LLEN
-comments.size
-comments.length
+comments.count  # also comments.size or comments.length       redis LLEN
 comments.empty?
 comments.one?
 comments.many?
 
-
 comments.first                                              # redis LINDEX
 comments.last
 
-comments[4]
-comments.at(4)
-comments.index(4) # comment at position 4 in the list
+# comment at position 4
+comments[4]  # also comments.at(4) or comments.index(4)
 
-
-
-comments[3, 5]                                              # redis LRANGE
-comments[3..5]
-comments.range(3, 5) # comments between positions 3 and 5
+# comments between positions 3 and 5:
+comments[3, 5] # also comments[3..5] or comments.range(3, 5)  redis LRANGE
 
 comments.from(7) # comments from position 7 to end of list
 
@@ -79,8 +72,8 @@ comments.to(5)   # comments from start of list to position 5
 comments.to_a
 comments.members # both list all members in a list
 
-comments.include?('trololol')
-comments.member?('trololol')  # expensive for a list, gets first all members
+comments.include?('trololol') # or comments.member?('trololol')
+                              # expensive for a list, gets all members first
 
 
 
