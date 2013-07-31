@@ -2,7 +2,7 @@
 
 ## hari
 
-Hari is a ruby gem made to make easier to persist and get objects and its `lists`, `sets`, `sorted sets` and **relations** in Redis.
+Hari is a ruby gem to make easier for Ruby objects handle their Redis' [`lists`](https://github.com/Clubjudge/hari#lists), [`sets`](https://github.com/Clubjudge/hari#sets), [`sorted_sets`](https://github.com/Clubjudge/hari#sorted_sets) and [**relations**](https://github.com/Clubjudge/hari#relations).
 
 ```ruby
 user = User.new(id: 20)
@@ -28,6 +28,12 @@ Hari(user: 30)
 
 => #<Hari::Node:0x007f90f2a9d460 @model_id=1, @node_type="user">
 ```
+
+### Lists
+
+### Sets
+
+### Sorted Sets
 
 ### Relations
 
