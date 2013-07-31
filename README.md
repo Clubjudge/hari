@@ -31,6 +31,87 @@ Hari(user: 30)
 
 ### Lists
 
+If you do
+
+```ruby
+Hari('user#42').list(:comments)
+```
+
+You get a `Hari::Keys::List` instance, with plenty of methods to work with the `hari:user#42:comments` Redis list.
+
+But if you do with the hashbang (`!`)
+
+```ruby
+Hari('user#42').list!(:comments)
+```
+
+You get all the members in this list insted. Let's go to the operations you can do with lists in Hari:
+
+```ruby
+
+comments = Hari('user#42').list(:comments)
+
+comments.count                                              # redis LLEN
+comments.size
+comments.length
+comments.empty?
+comments.one?
+comments.many?
+
+
+comments.first                                              # redis LINDEX
+comments.last
+
+comments[4]
+comments.at(4)
+comments.index(4) # comment at position 4 in the list
+
+
+
+comments[3, 5]                                              # redis LRANGE
+comments[3..5]
+comments.range(3, 5) # comments between positions 3 and 5
+
+comments.from(7) # comments from position 7 to end of list
+
+comments.to(5)   # comments from start of list to position 5
+
+comments.to_a
+comments.members # both list all members in a list
+
+comments.include?('trololol')
+comments.member?('trololol')  # expensive for a list, gets first all members
+
+
+
+comments[6] = 'Good!' # sets element in position 6          # redis LSET
+
+
+comments.rpush 'lol'                                        # redis RPUSH (append)
+comments.add 'omg'
+comments.push 'zomg'
+comments << 'LOL'
+
+
+comments.lpush 'First!'                                     # redis LPUSH (prepend)
+
+
+comments.insert 'LOL', 'OMG'
+comments.insert_after 'LOL', 'OMG'  # inserts OMG after LOL   redis LINSERT AFTER
+
+comments.insert_before 'LOL', 'OMG' # inserts OMG before LOL  redis LINSERT BEFORE
+
+
+comments.delete 'LOL' # deletes all ocurrences of LOL         redis LREM
+comments.delete 'LOL', 2 # deletes first 2 ocurrences of LOL
+
+comments.pop                                                # redis RPOP
+comments.rpop  # deletes and brings last element in list
+
+comments.shift                                              # redis LPOP
+comments.lpop  # deletes and brings first element in list
+```
+
 ### Sets
 
 ### Sorted Sets
