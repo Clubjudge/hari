@@ -2,7 +2,7 @@
 
 ## hari
 
-Hari is a ruby gem to make easier for Ruby objects handle their Redis' [`lists`](https://github.com/Clubjudge/hari#lists), [`sets`](https://github.com/Clubjudge/hari#sets), [`sorted_sets`](https://github.com/Clubjudge/hari#sorted_sets) and [**relations**](https://github.com/Clubjudge/hari#relations).
+Hari is a gem to make easier for objects handle their Redis' [`lists`](https://github.com/Clubjudge/hari#lists), [`sets`](https://github.com/Clubjudge/hari#sets), [`sorted_sets`](https://github.com/Clubjudge/hari#sorted_sets) and [**relations**](https://github.com/Clubjudge/hari#relations).
 
 ```ruby
 user = User.new(id: 20)
