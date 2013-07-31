@@ -10,7 +10,7 @@ user = User.new(id: 20)
 Hari(user).set(:friends_ids) << 10   # REDIS: SADD hari:user#20:friends_ids 10
 ```
 
-### The `Hari()` wrapper
+### The `Hari()` wrapper method
 
 It returns a `Hari::Node` representation of the object passed so you can call all `Node` operations available in Hari. You can do:
 
@@ -39,7 +39,7 @@ Hari(user: 30)
 
 ### Relations
 
-Hari uses the power of Redis data structures to create relations between nodes, allowing you to traverse nodes and its relations like a graph, doing something like:
+Hari uses the power of Redis data structures to create relations between nodes, allowing you to traverse nodes and its relations like a graph, doing for example:
 
 ```ruby
 # this gets the last 20 comments from the entities the user#1 follows
