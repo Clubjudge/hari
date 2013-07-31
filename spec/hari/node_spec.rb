@@ -111,7 +111,7 @@ describe Hari::Node do
 
       fans.intersect(friends, 1, 3).should eq %w(6 5 4)
 
-      fans.sort_by(friends).should eq %w(7 6 5 4 1 3 8)
+      fans.sort_by(friends).take(5).should eq %w(7 6 5 4 1)
     end
   end
 
