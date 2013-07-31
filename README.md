@@ -37,15 +37,15 @@ If you do
 Hari('user#42').list(:comments)
 ```
 
-You get a `Hari::Keys::List` instance, with plenty of methods to work with the `hari:user#42:comments` Redis list.
+You get a `Hari::Keys::List` instance, with methods to work with the `hari:user#42:comments` Redis list.
 
-But if you do with the hashbang (`!`)
+But if call it with the hashbang `!`
 
 ```ruby
 Hari('user#42').list!(:comments)
 ```
 
-You get all the members in this list insted. Let's go to the operations you can do with lists in Hari:
+You get all the members in this list instead. Let's go to the operations you can do with lists in Hari:
 
 ```ruby
 
@@ -69,7 +69,6 @@ comments.from(7) # comments from position 7 to end of list
 
 comments.to(5)   # comments from start of list to position 5
 
-comments.to_a
 comments.members # both list all members in a list
 
 comments.include?('trololol') # or comments.member?('trololol')
@@ -106,6 +105,57 @@ comments.lpop  # deletes and brings first element in list
 ```
 
 ### Sets
+
+If you do
+
+```ruby
+Hari('user#42').set(:friends_ids)
+```
+
+You get a `Hari::Keys::Set` instance, with methods to work with the `hari:user#42:friends_ids` Redis set.
+
+But if call it with the hashbang `!`
+
+```ruby
+Hari('user#42').set!(:friends_ids)
+```
+
+You get all the members in this set instead. Let's go to the operations you can do with sets in Hari:
+
+```ruby
+
+friends = Hari('user#42').set(:friends_ids)
+
+friends.count # also friends.size or friends.length   redis SCARD
+friends.empty?
+friends.one?
+friends.many?
+
+friends.include?(10) # also friends.member?(10)       redis SISMEMBER
+
+# all members
+friends.members                                     # redis SMEMBERS
+
+# random members
+friends.rand
+friends.rand(3)                                     # redis SRANDMEMBER
+
+friends.add 30, 40, 50                              # redis SADD
+friends << 60
+
+friends.delete 40, 50                               # redis SREM
+
+# deletes and return a random element
+friends.pop                                         # redis SPOP
+
+
+other_friends = Hari('user#43').set(:friends_ids)
+friends & other_friends                             # redis SINTER
+friends.intersect(other_friends)
+
+friends - other_friends                             # redis SDIFF
+friends.diff(other_friends)
+```
 
 ### Sorted Sets
 
