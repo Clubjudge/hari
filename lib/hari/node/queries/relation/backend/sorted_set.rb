@@ -10,6 +10,7 @@ class Hari::Node::Queries::Relation
 
       def fetch_relations_ids(set, options)
         from, limit = options.values_at(:from, :limit)
+        limit = limit.try(:to_i)
 
         if from.present? && from[:direction] == 'up'
           set.range_by_score from[:score], '+inf', desc: true, limit: [0, limit]
