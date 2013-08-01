@@ -16,6 +16,7 @@ class Hari::Node::Queries::Relation
         elsif from.present? && from[:direction] == 'down'
           set.range_by_score '-inf', from[:score], desc: true, limit: [0, limit]
         else
+          limit -= 1 unless limit <= 0
           set.range from, limit, desc: true
         end
       end
