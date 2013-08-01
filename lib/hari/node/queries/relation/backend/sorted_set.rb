@@ -39,7 +39,7 @@ class Hari::Node::Queries::Relation
       def step(start_node, nodes_ids, options = {})
         stream    = start_node.sorted_set("stream:#{SecureRandom.hex(6)}")
         direction = options[:direction] == :in ? 0 : 2
-        limit     = options.fetch(:limit, -1)
+        limit     = options.fetch(:limit, -1).try :to_i
 
         nodes_ids.each_with_index do |node_id, index|
           prune, stop = true, options.fetch(:step, 5)
