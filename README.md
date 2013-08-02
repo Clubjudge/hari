@@ -203,7 +203,7 @@ friends.revrank 'john' # also .reverse_ranking        redis ZREVRANK
 
 
 friends.members
-
+```
 
 ### Nodes
 
