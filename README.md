@@ -49,39 +49,49 @@ By now, you're probably wandering what the `Hari()` method does. It accepts an o
 Let's say every user will keep their comments in a linked list. If you do:
 
 ```ruby
-Hari('user#42').list(:comments)
+comments = Hari('user#42').list(:comments)
+
+=> #<Hari::Keys::List:0x007fcefb130cf0>
 ```
 
-You get a `List` object with Redis `list` operations. But if you call it with the hashbang `!`
+You get an object to call then Redis `list` operations. But if you want all the list members instead, call it with the hashbang `!`
 
 ```ruby
 Hari('user#42').list!(:comments)
+
+=> ["First!", "OMG", "LOL"]
 ```
 
-You get all the members in this list instead. Let's go to the operations you can do with lists in Hari:
+If you want just the count of comments, there's no need to fetch all comments from Redis first. Call this instead, it's faster:
 
 ```ruby
+comments.count  # also .size or .length
 
-comments = Hari('user#42').list(:comments)
-
-comments.count  # also .size or .length                       redis LLEN
 comments.empty?
 comments.one?
 comments.many?
+```
 
-comments.first                                              # redis LINDEX
+To get comments at specific positions in the list, you can do:
+
+```ruby
+comments.first
 comments.last
 
 # comment at position 4
 comments[4]  # also .at(4) or .index(4)
 
 # comments between positions 3 and 5:
-comments[3, 5] # also [3..5] or .range(3, 5)                 redis LRANGE
+comments[3, 5] # also [3..5] or .range(3, 5)
 
 comments.from(7) # comments from position 7 to end of list
 
 comments.to(5)   # comments from start of list to position 5
+```
 
+More options to work with the comments list:
+
+```ruby
 comments.members # both list all members in a list
 
 comments.include?('trololol') # or .member?('trololol')
@@ -89,31 +99,33 @@ comments.include?('trololol') # or .member?('trololol')
 
 
 
-comments[6] = 'Good!' # sets element in position 6          # redis LSET
+comments[6] = 'Good!' # sets element in position 6
 
 
-comments.rpush 'lol'                                        # redis RPUSH (append)
+# append to list
+
+comments.rpush 'lol'
 comments.add 'omg'
 comments.push 'zomg'
 comments << 'LOL'
 
-
-comments.lpush 'First!'                                     # redis LPUSH (prepend)
+# prepends to list
+comments.lpush 'First!'
 
 
 comments.insert 'LOL', 'OMG'
-comments.insert_after 'LOL', 'OMG'  # inserts OMG after LOL   redis LINSERT AFTER
+comments.insert_after 'LOL', 'OMG'  # inserts OMG after LOL
 
-comments.insert_before 'LOL', 'OMG' # inserts OMG before LOL  redis LINSERT BEFORE
+comments.insert_before 'LOL', 'OMG' # inserts OMG before LOL
 
 
-comments.delete 'LOL' # deletes all ocurrences of LOL         redis LREM
+comments.delete 'LOL' # deletes all ocurrences of LOL
 comments.delete 'LOL', 2 # deletes first 2 ocurrences of LOL
 
-comments.pop                                                # redis RPOP
+comments.pop
 comments.rpop  # deletes and brings last element in list
 
-comments.shift                                              # redis LPOP
+comments.shift
 comments.lpop  # deletes and brings first element in list
 ```
 
