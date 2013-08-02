@@ -1,35 +1,44 @@
 [![Build Status](https://travis-ci.org/Clubjudge/hari.png?branch=master)](https://travis-ci.org/Clubjudge/hari)
 
-## hari
+# Hari
 
-Hari is a gem to make easier for objects handle their Redis' [lists](https://github.com/Clubjudge/hari#lists), [sets](https://github.com/Clubjudge/hari#sets), [sorted sets](https://github.com/Clubjudge/hari#sorted_sets) and [**relations**](https://github.com/Clubjudge/hari#relations). You can also store the [**nodes**](https://github.com/Clubjudge/hari#nodes) in Redis if you wish.
+## Mile-high view
+
+Hari is a tool to abstract complex relationships between Ruby objects onto Redis data structures. It allows for expressive querying of those relationships as well, in an easy way. It is mostly geared towards typical social networking concepts like news feeds, activity logs, friends of friends, mutual friends, and so on.
+
+## Basic concepts
+
+Hari embraces normal objects, and allows 2 major modes of operation: abstraction of Redis operations, and actual relationship creation and querying.
+
+### Direct abstraction of Redis operations (lists, sets, sorted sets, etc)
+
+Given you have a `User` model class:
 
 ```ruby
-user = User.new(id: 20)
+class User
+
+  attr_reader :id
+
+  def initialize(id)
+    @id = id
+  end
+
+end
+```
+
+You can have a set with `friends_ids` in Redis for each user doing:
+
+```ruby
+user = User.new(20)
 
 Hari(user).set(:friends_ids) << 10   # REDIS: SADD hari:user#20:friends_ids 10
 ```
 
-### The `Hari()` wrapper method
+The `Hari()` wrapper method returns a `Hari::Node` representation of the object passed so you can call all operations available in Hari.
 
-It returns a `Hari::Node` representation of the object passed so you can call all `Node` operations available in Hari. You can do:
+It also accepts a string with the node identification (`Hari("user#20")`), or a type => id hash (`Hari(user: 20)`), so depending on your context, you don't need to fetch the model from the database if you know the type and id of the model.
 
-```ruby
-class User
-  attr_reader :id   # might be an ActiveRecord::Base or whatever object responds to #id
-end
-
-user = User.find(20)
-
-# all examples below work
-Hari(user)
-Hari('user#30')
-Hari(user: 30)
-
-=> #<Hari::Node:0x007f90f2a9d460 @model_id=1, @node_type="user">
-```
-
-### Lists
+#### Lists
 
 If you do
 
@@ -104,7 +113,7 @@ comments.shift                                              # redis LPOP
 comments.lpop  # deletes and brings first element in list
 ```
 
-### Sets
+#### Sets
 
 If you do
 
@@ -157,7 +166,7 @@ friends - other_friends                             # redis SDIFF
 friends.diff(other_friends)
 ```
 
-### Sorted Sets
+#### Sorted Sets
 
 If you do
 
