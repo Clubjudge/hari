@@ -4,7 +4,7 @@
 
 ## Mile-high view
 
-Hari is a tool to abstract complex relationships between Ruby objects onto Redis data structures. It allows for expressive querying of those relationships as well, in an easy way. It is mostly geared towards typical social networking concepts like news feeds, activity logs, friends of friends, mutual friends, and so on.
+**Hari** is a tool to abstract complex relationships between **Ruby** objects onto **Redis** data structures. It allows for expressive querying of those relationships as well, in an easy way. It is mostly geared towards typical social networking concepts like news feeds, activity logs, friends of friends, mutual friends, and so on.
 
 ## Basic concepts
 
@@ -12,7 +12,7 @@ Hari embraces normal objects, and allows 2 major modes of operation: abstraction
 
 ### Direct abstraction of Redis operations (lists, sets, sorted sets, etc)
 
-Given you have a `User` model class:
+Imagine this `User` model class:
 
 ```ruby
 class User
@@ -26,7 +26,7 @@ class User
 end
 ```
 
-You can have a set with `friends_ids` in Redis for each user doing:
+You can create a **set** to store the user relation with his friends:
 
 ```ruby
 user = User.new(20)
@@ -34,21 +34,25 @@ user = User.new(20)
 Hari(user).set(:friends_ids) << 10   # REDIS: SADD hari:user#20:friends_ids 10
 ```
 
-The `Hari()` wrapper method returns a `Hari::Node` representation of the object passed so you can call all operations available in Hari.
+It's possible now to query the mutual friends between users:
 
-It also accepts a string with the node identification (`Hari("user#20")`), or a type => id hash (`Hari(user: 20)`), so depending on your context, you don't need to fetch the model from the database if you know the type and id of the model.
+```ruby
+Hari(user: 20).set(:friends_ids) & Hari(user: 30).set(:friends_ids)
+
+=> ['10', '25', '40']
+```
+
+By now, you're probably wandering what the `Hari()` method does. It accepts an object like `user` as a parameter, or an identification of this object like `"user#20"`, or even `{user: 30}` and returns a `Hari::Node` representation of the object referenced so you can call all operations available in Hari.
 
 #### Lists
 
-If you do
+Let's say every user will keep their comments in a linked list. If you do:
 
 ```ruby
 Hari('user#42').list(:comments)
 ```
 
-You get a `Hari::Keys::List` instance, with methods to work with the `hari:user#42:comments` Redis list.
-
-But if call it with the hashbang `!`
+You get a `List` object with Redis `list` operations. But if you call it with the hashbang `!`
 
 ```ruby
 Hari('user#42').list!(:comments)
