@@ -51,7 +51,7 @@ You get all the members in this list instead. Let's go to the operations you can
 
 comments = Hari('user#42').list(:comments)
 
-comments.count  # also comments.size or comments.length       redis LLEN
+comments.count  # also .size or .length                       redis LLEN
 comments.empty?
 comments.one?
 comments.many?
@@ -60,10 +60,10 @@ comments.first                                              # redis LINDEX
 comments.last
 
 # comment at position 4
-comments[4]  # also comments.at(4) or comments.index(4)
+comments[4]  # also .at(4) or .index(4)
 
 # comments between positions 3 and 5:
-comments[3, 5] # also comments[3..5] or comments.range(3, 5)  redis LRANGE
+comments[3, 5] # also [3..5] or .range(3, 5)                 redis LRANGE
 
 comments.from(7) # comments from position 7 to end of list
 
@@ -71,7 +71,7 @@ comments.to(5)   # comments from start of list to position 5
 
 comments.members # both list all members in a list
 
-comments.include?('trololol') # or comments.member?('trololol')
+comments.include?('trololol') # or .member?('trololol')
                               # expensive for a list, gets all members first
 
 
@@ -126,7 +126,7 @@ You get all the members in this set instead. Let's go to the operations you can 
 
 friends = Hari('user#42').set(:friends_ids)
 
-friends.count # also friends.size or friends.length   redis SCARD
+friends.count # also .size or .length                 redis SCARD
 friends.empty?
 friends.one?
 friends.many?
@@ -158,6 +158,52 @@ friends.diff(other_friends)
 ```
 
 ### Sorted Sets
+
+If you do
+
+```ruby
+Hari('user#42').sorted_set(:friends)
+```
+
+You get a `Hari::Keys::SortedSet` instance, with methods to work with the `hari:user#42:friends` Redis sorted set.
+
+But if call it with the hashbang `!`
+
+```ruby
+Hari('user#42').sorted_set!(:friends_ids)
+```
+
+You get all the members in this sorted set instead. Let's go to the operations you can do with sorted sets in Hari:
+
+```ruby
+
+friends = Hari('user#42').sorted_set(:friends)
+
+friends.add 10, 'john', 30, 'bill', 50, 'jack'      # redis ZADD
+friends << [10, 'john', 30, 'bill', 50, 'jack']
+
+friends.count # also .size or .length                 redis ZCARD
+friends.empty?
+friends.one?
+friends.many?
+
+
+friends.delete 'bill', 'jack'                       # redis ZREM
+
+
+friends.score 'john'                                # redis ZSCORE
+
+friends.include? 'john'
+
+
+friends.rank 'john' # also .ranking or .position      redis ZRANK
+
+friends.revrank 'john' # also .reverse_ranking        redis ZREVRANK
+                       # or   .reverse_position
+
+
+friends.members
+
 
 ### Nodes
 
