@@ -39,7 +39,7 @@ It's possible now to query the mutual friends between users:
 ```ruby
 Hari(user: 20).set(:friends_ids) & Hari(user: 30).set(:friends_ids)
 
-=> ['10', '25', '40']
+=> ["10", "25", "40"]
 ```
 
 By now, you're probably wandering what the `Hari()` method does. It accepts an object like `user` as a parameter, or an identification of this object like `"user#20"`, or even `{user: 30}` and returns a `Hari::Node` representation of the object referenced so you can call all operations available in Hari.
@@ -131,99 +131,98 @@ comments.lpop  # deletes and brings first element in list
 
 #### Sets
 
-If you do
+We're gonna keep the friends ids in a set like this:
 
 ```ruby
-Hari('user#42').set(:friends_ids)
+friends = Hari('user#42').set(:friends_ids)
+
+=> #<Hari::Keys::Set:0x007fb5c45ae1b0>
 ```
 
-You get a `Hari::Keys::Set` instance, with methods to work with the `hari:user#42:friends_ids` Redis set.
-
-But if call it with the hashbang `!`
+This returns an object to call then Redis `set` operations. But if you want all the set members instead, call it with the hashbang `!`
 
 ```ruby
 Hari('user#42').set!(:friends_ids)
+
+=> ["10", "30"]
 ```
 
-You get all the members in this set instead. Let's go to the operations you can do with sets in Hari:
+Let's go to the operations you can do with sets in Hari:
 
 ```ruby
 
-friends = Hari('user#42').set(:friends_ids)
-
-friends.count # also .size or .length                 redis SCARD
+friends.count # also .size or .length
 friends.empty?
 friends.one?
 friends.many?
 
-friends.include?(10) # also friends.member?(10)       redis SISMEMBER
+friends.include?(10) # also friends.member?(10)
 
 # all members
-friends.members                                     # redis SMEMBERS
+friends.members
 
 # random members
 friends.rand
-friends.rand(3)                                     # redis SRANDMEMBER
+friends.rand(3)
 
-friends.add 30, 40, 50                              # redis SADD
+friends.add 30, 40, 50
 friends << 60
 
-friends.delete 40, 50                               # redis SREM
+friends.delete 40, 50
 
 # deletes and return a random element
-friends.pop                                         # redis SPOP
+friends.pop
 
 
 other_friends = Hari('user#43').set(:friends_ids)
-friends & other_friends                             # redis SINTER
+friends & other_friends
 friends.intersect(other_friends)
 
-friends - other_friends                             # redis SDIFF
+friends - other_friends
 friends.diff(other_friends)
 ```
 
 #### Sorted Sets
 
-If you do
+If you want to have friends sorted by some weight (say, BFF: 100, family: 80, colleague: 40, …), you can use a sorted_set for that.
 
 ```ruby
-Hari('user#42').sorted_set(:friends)
+friends = Hari('user#42').sorted_set(:friends)
+
+=> #<Hari::Keys::SortedSet:0x007fb5c42a6df0>
 ```
 
-You get a `Hari::Keys::SortedSet` instance, with methods to work with the `hari:user#42:friends` Redis sorted set.
-
-But if call it with the hashbang `!`
+This returns an object to call then Redis `sorted_set` operations. But if you want all the sorted set members instead, call it with the hashbang `!`
 
 ```ruby
 Hari('user#42').sorted_set!(:friends_ids)
+
+=> ["bill", "john", "mark"]
 ```
 
-You get all the members in this sorted set instead. Let's go to the operations you can do with sorted sets in Hari:
+These are the operations you can do with a sorted set in Hari:
 
 ```ruby
-
-friends = Hari('user#42').sorted_set(:friends)
-
-friends.add 10, 'john', 30, 'bill', 50, 'jack'      # redis ZADD
+friends.add 10, 'john', 30, 'bill', 50, 'jack'
 friends << [10, 'john', 30, 'bill', 50, 'jack']
 
-friends.count # also .size or .length                 redis ZCARD
+friends.count # also .size or .length
 friends.empty?
 friends.one?
 friends.many?
 
 
-friends.delete 'bill', 'jack'                       # redis ZREM
+friends.delete 'bill', 'jack'
 
 
-friends.score 'john'                                # redis ZSCORE
+friends.score 'john'
 
 friends.include? 'john'
 
 
-friends.rank 'john' # also .ranking or .position      redis ZRANK
+friends.rank 'john' # also .ranking or .position
 
-friends.revrank 'john' # also .reverse_ranking        redis ZREVRANK
+friends.revrank 'john' # also .reverse_ranking
                        # or   .reverse_position
 
 
