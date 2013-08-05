@@ -10,7 +10,7 @@
 
 Hari embraces normal objects, and allows 2 major modes of operation: abstraction of Redis operations, and actual relationship creation and querying.
 
-### Direct abstraction of Redis operations (lists, sets, sorted sets, etc)
+## Direct abstraction of Redis operations (lists, sets, sorted sets, etc)
 
 Imagine this `User` model class:
 
@@ -229,11 +229,9 @@ friends.revrank 'john' # also .reverse_ranking
 friends.members
 ```
 
-### Nodes
+## Hari Relationships
 
-### Relations
-
-Hari uses the power of Redis data structures to create relations between nodes, allowing you to traverse nodes and its relations like a graph, doing for example:
+Hari uses the power of Redis data structures to create relations between objects, allowing you to traverse nodes and its relations like a graph.
 
 ```ruby
 # this gets the last 20 comments from the entities the user#1 follows
@@ -243,22 +241,30 @@ Hari(user: 1).out(:follow).out(:comments).limit(20)
 Creating a relation can be as simple as:
 
 ```ruby
-Hari.relation! :follow, user, event
+Hari.relation! :follow, user, artist
 ```
 
 To remove a relation, do:
 
 ```ruby
-Hari.remove_relation! :follow, user, event
+Hari.remove_relation! :follow, user, artist
 ```
 
-To list all nodes that follow an event:
+To create a query to get followers of this artist, do:
 
 ```ruby
-Hari(event).in(:follow).nodes
+Hari(artist).in(:follow)
 ```
 
-The above query will return a query object (lazy evaluation). To return the actual data, you need to call `to_a`, or `nodes!`.
+The call above returns a query expression. You can do:
+
+```ruby
+Hari(artist).in(:follow).limit(10) # just the last 10 followers
+
+Hari(artist).in(:follow).limit
+```
+
+
 
 If you just want the nodes ids, not the node instances, you can do:
 
