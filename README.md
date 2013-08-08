@@ -34,7 +34,7 @@ user = User.new(20)
 Hari(user).set(:friends_ids) << 10   # REDIS: SADD hari:user#20:friends_ids 10
 ```
 
-It's possible now to query the mutual friends between users:
+Then it's possible to query the mutual friends between users:
 
 ```ruby
 Hari(user: 20).set(:friends_ids) & Hari(user: 30).set(:friends_ids)
@@ -54,7 +54,7 @@ comments = Hari('user#42').list(:comments)
 => #<Hari::Keys::List:0x007fcefb130cf0>
 ```
 
-You get an object to call then Redis `list` operations. But if you want all the list members instead, call it with the hashbang `!`
+You get an object to call Redis `list` operations. If you want instead all the list members, call it with the hashbang `!`
 
 ```ruby
 Hari('user#42').list!(:comments)
@@ -62,7 +62,7 @@ Hari('user#42').list!(:comments)
 => ["First!", "OMG", "LOL"]
 ```
 
-If you want just the count of comments, there's no need to fetch all comments from Redis first. Call this instead, it's faster:
+To bring the count of comments, there's no need to fetch all comments from Redis first. Call this instead, it's faster:
 
 ```ruby
 comments.count  # also .size or .length
@@ -92,15 +92,12 @@ comments.to(5)   # comments from start of list to position 5
 More options to work with the comments list:
 
 ```ruby
-comments.members # both list all members in a list
+comments.members # all members
 
 comments.include?('trololol') # or .member?('trololol')
-                              # expensive for a list, gets all members first
-
-
+                              # expensive for a list, because gets all members first
 
 comments[6] = 'Good!' # sets element in position 6
-
 
 # append to list
 
@@ -112,12 +109,10 @@ comments << 'LOL'
 # prepends to list
 comments.lpush 'First!'
 
-
 comments.insert 'LOL', 'OMG'
 comments.insert_after 'LOL', 'OMG'  # inserts OMG after LOL
 
 comments.insert_before 'LOL', 'OMG' # inserts OMG before LOL
-
 
 comments.delete 'LOL' # deletes all ocurrences of LOL
 comments.delete 'LOL', 2 # deletes first 2 ocurrences of LOL
@@ -139,7 +134,7 @@ friends = Hari('user#42').set(:friends_ids)
 => #<Hari::Keys::Set:0x007fb5c45ae1b0>
 ```
 
-This returns an object to call then Redis `set` operations. But if you want all the set members instead, call it with the hashbang `!`
+This returns an object to call Redis `set` operations. If you want instead all the set members, call it with the hashbang `!`
 
 ```ruby
 Hari('user#42').set!(:friends_ids)
@@ -163,7 +158,7 @@ friends.members
 
 # random members
 friends.rand
-friends.rand(3)
+friends.rand(3) # 3 random members, default is just one
 
 friends.add 30, 40, 50
 friends << 60
@@ -173,13 +168,10 @@ friends.delete 40, 50
 # deletes and return a random element
 friends.pop
 
-
 other_friends = Hari('user#43').set(:friends_ids)
-friends & other_friends
-friends.intersect(other_friends)
+friends & other_friends # or .intersect
 
-friends - other_friends
-friends.diff(other_friends)
+friends - other_friends  # or .diff
 ```
 
 #### Sorted Sets
@@ -192,7 +184,7 @@ friends = Hari('user#42').sorted_set(:friends)
 => #<Hari::Keys::SortedSet:0x007fb5c42a6df0>
 ```
 
-This returns an object to call then Redis `sorted_set` operations. But if you want all the sorted set members instead, call it with the hashbang `!`
+This returns an object to call Redis `sorted_set` operations. If you want instead all the sorted set members, call it with the hashbang `!`
 
 ```ruby
 Hari('user#42').sorted_set!(:friends_ids)
@@ -211,20 +203,16 @@ friends.empty?
 friends.one?
 friends.many?
 
-
 friends.delete 'bill', 'jack'
-
 
 friends.score 'john'
 
 friends.include? 'john'
 
-
 friends.rank 'john' # also .ranking or .position
 
 friends.revrank 'john' # also .reverse_ranking
                        # or   .reverse_position
-
 
 friends.members
 ```
@@ -260,11 +248,7 @@ The call above returns a query expression. You can do:
 
 ```ruby
 Hari(artist).in(:follow).limit(10) # just the last 10 followers
-
-Hari(artist).in(:follow).limit
 ```
-
-
 
 If you just want the nodes ids, not the node instances, you can do:
 
