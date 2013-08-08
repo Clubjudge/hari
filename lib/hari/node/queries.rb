@@ -9,6 +9,7 @@ module Hari
       delegate :set,        :set!,        to: :set_query
       delegate :sorted_set, :sorted_set!, to: :sorted_set_query
       delegate :list,       :list!,       to: :list_query
+      delegate :string,     :string!,     to: :string_query
 
       private
 
@@ -22,6 +23,10 @@ module Hari
 
       def list_query
         Keys::List.new query_node
+      end
+
+      def string_query
+        Keys::String.new query_node
       end
 
       def relation_query

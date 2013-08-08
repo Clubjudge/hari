@@ -22,8 +22,8 @@ describe Hari::Keys::Key do
   end
 
   specify '#expire + #persist + #ttl' do
-    subject.expire 100 # ms
-    (subject.ttl.to_i < 100).should be_true
+    subject.expire 80 # ms
+    (subject.ttl.to_i < 80).should be_true
 
     sleep 0.1
 
