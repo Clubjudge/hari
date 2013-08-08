@@ -67,22 +67,76 @@ To remove a relation, do:
 Hari.remove_relation! :follow, user, artist
 ```
 
-To create a query to get followers of this artist, do:
+Let's mount some queries:
 
 ```ruby
+# artist followers
 Hari(artist).in(:follow)
+
+# entities that user follow
+Hari(user).out(:follow)
+
+# just the last 10 followers of artist
+Hari(artist).in(:follow).limit(10)
+
+# paginates from a score (timestamp.to_f),
+# bringing the next 10 followers up from a last timestamp,
+# (useful for pooling streams)
+Hari(artist).in(:follow).limit(10).from(1375977470.382)
+
+# paginates from a score down,
+# bringing the previous 10 followers from a last timestamp
+Hari(artist).in(:follow).limit(10).from(1375977470.382, :down)
+
+# chaining relations between nodes
+# last 10 entities to be followed by the followers of user
+Hari(user).out(:follow).out(:follow).limit(10)
+
+# All users following artist
+Hari(artist).in(:follow).type(:user)
 ```
 
-The call above returns a query expression. You can do:
+All the calls above returns a lazy query expression. It means, the ruby code still didn't fetch the Redis backend, we're just mounting a query.
+
+Below you can see some of the methods that make the query come to an end:
 
 ```ruby
-Hari(artist).in(:follow).count # how many followers
+# how many followers
+Hari(artist).in(:follow).count
+=> 2001
 
-Hari(artist).in(:follow).limit(10) # just the last 10 followers (still an expression)
-```
+# returns all followers nodes ids
+Hari(artist).in(:follow).nodes_ids!
+=> ['artist#20', 'user#30', 'user#33']
 
-If you just want the nodes ids, not the node instances, you can do:
 
-```ruby
-Hari(event).in(:follow).nodes_ids!
+# returns all followers instances of Hari::Node
+# depends that you have the nodes persisted for each object
+# this is the default implementation when you do .to_a
+Hari(artist).in(:follow).nodes!
+
+tiesto_followers   = Hari(artist: 21).in(:follow).type(:user)
+daftpunk_followers = Hari(artist: 42).in(:follow).type(:user)
+
+# count of common users following two artists
+tiesto_followers.intersect_count(daft_punk_followers)
+=> 23450
+
+# actual users ids following two artists
+tiesto_followers.intersect(daft_punk_followers)
+=> [17, 29, 3, 173, 919, 11]
+
+# paginating through them (start + stop)
+tiesto_followers.intersect(daft_punk_followers, 2, 5)
+=> [3, 173, 919]
+
+user_friends = Hari(user).out(:follow).type(:user)
+
+# bringing all followers of artist, but user's friends first
+tiesto_followers.sort_by user_friends
+=> [883, 317, 211, 157, 163, 103, 47, 53, 7]
+
+# paginating through them (offset + count)
+tiesto_followers.sort_by user_friends, 3, 5
+=> [157, 163, 103, 47, 53]
 ```
