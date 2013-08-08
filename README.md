@@ -76,7 +76,9 @@ Hari(artist).in(:follow)
 The call above returns a query expression. You can do:
 
 ```ruby
-Hari(artist).in(:follow).limit(10) # just the last 10 followers
+Hari(artist).in(:follow).count # how many followers
+
+Hari(artist).in(:follow).limit(10) # just the last 10 followers (still an expression)
 ```
 
 If you just want the nodes ids, not the node instances, you can do:
