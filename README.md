@@ -89,7 +89,7 @@ Hari(artist).in(:follow).limit(10).from(1375977470.382)
 Hari(artist).in(:follow).limit(10).from(1375977470.382, :down)
 
 # chaining relations between nodes
-# last 10 entities to be followed by the followers of user
+# last 10 entities to be followed by users followed by user
 Hari(user).out(:follow).out(:follow).limit(10)
 
 # All users following artist
