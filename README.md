@@ -34,7 +34,7 @@ user = User.new(20)
 Hari(user).set(:friends_ids) << 10   # REDIS: SADD hari:user#20:friends_ids 10
 ```
 
-Then it's possible to query the mutual friends between users:
+Then it's possible, for instance, to query the mutual friends between users:
 
 ```ruby
 Hari(user: 20).set(:friends_ids) & Hari(user: 30).set(:friends_ids)
@@ -96,9 +96,9 @@ Hari(user).out(:follow).out(:follow).limit(10)
 Hari(artist).in(:follow).type(:user)
 ```
 
-All the calls above returns a lazy query expression. It means, the ruby code still didn't fetch the Redis backend, we're just mounting a query.
+All the calls above return a lazy query expression. The ruby code still didn't fetch the Redis backend, it's mounting a composable query.
 
-Below you can see some of the methods that make the query come to an end:
+Below there are some of the methods that make the query come to an end:
 
 ```ruby
 # how many followers
@@ -120,7 +120,7 @@ daftpunk_followers = Hari(artist: 42).in(:follow).type(:user)
 
 # count of common users following two artists
 tiesto_followers.intersect_count(daft_punk_followers)
-=> 23450
+=> 6
 
 # actual users ids following two artists
 tiesto_followers.intersect(daft_punk_followers)
