@@ -10,7 +10,7 @@
 
 Hari embraces normal objects, and allows 2 major modes of operation: abstraction of Redis operations, and actual relationship creation and querying.
 
-## Direct abstraction of Redis operations (lists, sets, sorted sets, etc)
+## Abstraction of Redis operations (lists, sets, sorted sets, etc)
 
 Imagine this `User` model class:
 
@@ -46,7 +46,7 @@ By now, you're probably wandering what the `Hari()` method does. It accepts an o
 
 In the wiki you checkout the list of all currently available operations in Hari for [Lists](https://github.com/Clubjudge/hari/wiki/Lists), [Sets](https://github.com/Clubjudge/hari/wiki/Sets) and [Sorted Sets](https://github.com/Clubjudge/hari/wiki/Sorted-Sets).
 
-## Hari Relationships
+## Relationships
 
 Hari uses the power of Redis data structures to create relations between objects, allowing you to traverse nodes and its relations like a graph.
 
