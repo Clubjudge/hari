@@ -42,6 +42,10 @@ module Hari
           end
         end
 
+        def count
+          Hari.redis.zcard key
+        end
+
         def key
           start_key = Hari.node_key(relation.parent.node)
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"

@@ -119,6 +119,14 @@ describe Hari::Node do
 
       fans.sort_by(friends).take(5).should eq %w(7 6 5 4 1)
     end
+
+    it 'has count' do
+      14.times { Hari.relation! :follow, 'user#2', "user##{SecureRandom.hex(2)}" }
+      3.times  { Hari.relation! :follow, 'user#2', "celeb##{SecureRandom.hex(2)}"}
+
+      Hari('user#2').out(:follow).type(:user).count.should eq(15)
+      Hari('user#1').in(:follow).type(:user).count.should eq(1)
+    end
   end
 
 end
