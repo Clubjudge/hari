@@ -3,10 +3,11 @@ module Hari
     module Queries
       class Type
 
-        attr_reader :relation, :name
+        attr_reader :relation, :name, :options
 
         def initialize(relation, name)
           @relation, @name = relation, name
+          @options = {}
         end
 
         def intersect_count(type)
@@ -47,7 +48,10 @@ module Hari
         end
 
         def ids
-          Hari.redis.zrevrange(key, 0, -1)
+          start = options[:start] || 0
+          stop  = options[:stop]  || -1
+
+          Hari.redis.zrevrange key, start, stop
         end
 
         def nodes_ids
@@ -74,6 +78,13 @@ module Hari
         alias :relations_ids! :relations_ids
         alias :rids           :relations_ids
         alias :rel_ids        :relations_ids
+
+        def limit(start, stop)
+          options[:start] = start
+          options[:stop]  = stop
+
+          self
+        end
 
         def key
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"

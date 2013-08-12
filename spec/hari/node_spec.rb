@@ -171,6 +171,15 @@ describe Hari::Node do
       people[4].name.should eq('Lili')
     end
 
+    it 'paginates' do
+      30.times do |i|
+        Hari.relation! :follow, 'user#42', "celeb##{i + 1}"
+      end
+
+      query = Hari('user#42').out(:follow).type(:celeb).limit(13, 16)
+      query.ids.should eq %w(17 16 15 14)
+    end
+
   end
 
 end
