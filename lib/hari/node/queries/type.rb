@@ -54,6 +54,15 @@ module Hari
         alias :n_ids      :nodes_ids
         alias :nids       :nodes_ids
 
+        def nodes
+          if ids = nodes_ids.presence
+            Hari.redis.mget(ids).map &Hari::Node.method(:from_source)
+          end
+        end
+
+        alias :nodes! :nodes
+        alias :to_a   :nodes
+
         def key
           start_key = Hari.node_key(relation.parent.node)
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"

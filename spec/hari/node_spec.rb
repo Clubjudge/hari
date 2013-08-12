@@ -143,6 +143,26 @@ describe Hari::Node do
       user_celebs.n_ids.should eq(celebs)
     end
 
+    it 'can list nodes' do
+      followings = [teresa, raimundo, maria, joaquim, lili]
+      x = 5
+
+      followings.each do |following|
+        Delorean.time_travel_to x.minutes.ago do
+          Hari.relation! :follow, joao, following
+        end
+
+        x += 5
+      end
+
+      people = joao.out(:follow).type(:test_node).nodes
+      people[0].name.should eq('Teresa')
+      people[1].name.should eq('Raimundo')
+      people[2].name.should eq('Maria')
+      people[3].name.should eq('Joaquim')
+      people[4].name.should eq('Lili')
+    end
+
   end
 
 end
