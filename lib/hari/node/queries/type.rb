@@ -46,8 +46,12 @@ module Hari
           Hari.redis.zcard key
         end
 
+        def ids
+          Hari.redis.zrevrange(key, 0, -1)
+        end
+
         def nodes_ids
-          Hari.redis.zrevrange(key, 0, -1).map { |id| "#{name}##{id}" }
+          ids.map { |id| "#{name}##{id}" }
         end
 
         alias :nodes_ids! :nodes_ids
@@ -63,18 +67,32 @@ module Hari
         alias :nodes! :nodes
         alias :to_a   :nodes
 
+        def relations_ids
+          ids.map &method(:relation_key)
+        end
+
+        alias :relations_ids! :relations_ids
+        alias :rids           :relations_ids
+        alias :rel_ids        :relations_ids
+
         def key
-          start_key = Hari.node_key(relation.parent.node)
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"
         end
 
         def sort_key
-          start_key = Hari.node_key(relation.parent.node)
-          "#{start_key}:#{relation.name}:#{name}#*"
+          relation_key '*'
+        end
+
+        def relation_key(id)
+          "#{start_key}:#{relation.name}:#{name}##{id}"
         end
 
         def intersect_key(type)
           "inter:#{key}:#{type.key}"
+        end
+
+        def start_key
+          Hari.node_key relation.parent.node
         end
 
       end

@@ -137,10 +137,18 @@ describe Hari::Node do
 
       celebs = user_celebs.nodes_ids
       celebs.should eq %w(celeb#w celeb#z celeb#y celeb#x)
+    end
 
-      user_celebs.nodes_ids!.should eq(celebs)
-      user_celebs.nids.should eq(celebs)
-      user_celebs.n_ids.should eq(celebs)
+    it 'can list relations ids' do
+      Hari.relation! :follow, 'user#1', 'celeb#y'
+      Hari.relation! :follow, 'user#1', 'celeb#z'
+      Hari.relation! :follow, 'user#1', 'celeb#w'
+
+      relations = Hari('user#1').out(:follow).type(:celeb).relations_ids
+      relations.should eq %w(user#1:follow:celeb#w
+                             user#1:follow:celeb#z
+                             user#1:follow:celeb#y
+                             user#1:follow:celeb#x)
     end
 
     it 'can list nodes' do
