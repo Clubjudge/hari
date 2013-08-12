@@ -46,6 +46,14 @@ module Hari
           Hari.redis.zcard key
         end
 
+        def nodes_ids
+          Hari.redis.zrevrange(key, 0, -1).map { |id| "#{name}##{id}" }
+        end
+
+        alias :nodes_ids! :nodes_ids
+        alias :n_ids      :nodes_ids
+        alias :nids       :nodes_ids
+
         def key
           start_key = Hari.node_key(relation.parent.node)
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"
