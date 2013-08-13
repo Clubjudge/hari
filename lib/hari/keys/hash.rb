@@ -52,7 +52,7 @@ module Hari
       alias :[]= :set
 
       def merge!(args = {})
-        Hari.redis.hmset key, args
+        Hari.redis.hmset key, args.to_a.flatten
       end
 
       def count

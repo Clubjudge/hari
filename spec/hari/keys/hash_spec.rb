@@ -42,13 +42,14 @@ describe Hari::Keys::Hash do
     subject.values_at(:city, :country).should eq %w(Amsterdam Netherlands)
   end
 
-  specify '#count' do
+  specify '#count + #merge!' do
     subject.count.should eq(1)
-    subject[:one] = 'more'
+    subject.merge! one: 'more', and: 'another_one'
+    subject.keys.sort.should eq %w(and genre one)
 
-    subject.count.should eq(2)
-    subject.size.should eq(2)
-    subject.length.should eq(2)
+    subject.count.should eq(3)
+    subject.size.should eq(3)
+    subject.length.should eq(3)
   end
 
 end
