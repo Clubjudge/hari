@@ -6,12 +6,21 @@ module Hari
 
       delegate :in, :out, to: :relation_query
 
+      delegate :hash,       :hash!,       to: :hash_query
+      delegate :list,       :list!,       to: :list_query
       delegate :set,        :set!,        to: :set_query
       delegate :sorted_set, :sorted_set!, to: :sorted_set_query
-      delegate :list,       :list!,       to: :list_query
       delegate :string,     :string!,     to: :string_query
 
       private
+
+      def hash_query
+        Keys::Hash.new query_node
+      end
+
+      def list_query
+        Keys::List.new query_node
+      end
 
       def set_query
         Keys::Set.new query_node
@@ -19,10 +28,6 @@ module Hari
 
       def sorted_set_query
         Keys::SortedSet.new query_node
-      end
-
-      def list_query
-        Keys::List.new query_node
       end
 
       def string_query
