@@ -7,8 +7,9 @@ require 'active_support/core_ext/numeric/time'
 
 class TestEntity < Hari::Entity
   property :name
-  property :birth,  type: Date
-  property :points, type: Integer
+  property :birth,       type: Date
+  property :points,      type: Integer
+  property :preferences, type: Hash
 end
 
 class TestNode < Hari::Node

@@ -7,6 +7,7 @@ module Hari
       autoload :Date,     'hari/entity/serialization/date'
       autoload :DateTime, 'hari/entity/serialization/datetime'
       autoload :Float,    'hari/entity/serialization/float'
+      autoload :Hash,     'hari/entity/serialization/hash'
       autoload :Integer,  'hari/entity/serialization/integer'
       autoload :String,   'hari/entity/serialization/string'
       autoload :Time,     'hari/entity/serialization/time'
