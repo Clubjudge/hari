@@ -39,51 +39,9 @@ class Hari::Node::Queries::Relation
       def step(start_node, nodes_ids, options = {})
         stream    = start_node.sorted_set("stream:#{SecureRandom.hex(6)}")
         direction = options[:direction] == :in ? 0 : 2
-        limit     = options.fetch(:limit, -1).try :to_i
+        limit     = (options[:limit].presence || -1).to_i
 
-        nodes_ids.each_with_index do |node_id, index|
-          prune, stop = true, options.fetch(:step, 5)
-
-          if limit == -1 || stream.count < limit
-            prune, stop = false, limit
-          end
-
-          start, digg = 0, true
-
-          while digg
-            set = Hari(node_id).sorted_set set_name(options)
-
-            if from = options[:from].presence
-              args = { desc: true, with_scores: true, limit: [start, stop] }
-
-              if from[:direction] == 'up'
-                scored_relations_ids = set.range_by_score(from[:score], '+inf', args)
-              elsif from[:direction] == 'down'
-                scored_relations_ids = set.range_by_score('-inf', from[:score], args)
-              end
-            else
-              scored_relations_ids = set.range(start, stop, desc: true, with_scores: true)
-            end
-
-            break if scored_relations_ids.empty?
-
-            scored_nodes_ids = scored_relations_ids.map { |(r, s)| [s, r.split(':')[direction]] }.flatten
-            stream.add *scored_nodes_ids
-
-            last_node_id = scored_nodes_ids.last
-
-            if prune
-              stream.trim_by_rank 0, stop
-
-              unless stream.include? last_node_id
-                digg = false
-                start += stop + 1
-              end
-            else
-              digg = false
-            end
-          end
-        end
+        nodes_ids.each { |n| step_node n, stream, limit, direction, options }
 
         nodes_ids = stream.revrange
 
@@ -95,6 +53,67 @@ class Hari::Node::Queries::Relation
       end
 
       private
+
+      def step_node(node_id, stream, limit, direction, options)
+        set = Hari(node_id).sorted_set set_name(options)
+
+        start = 0
+        stop = calculate_stop(stream, limit, options)
+        prune = stream.count > limit && limit != -1
+
+        digg = true
+
+        while digg
+          if from = options[:from].presence
+            args = { desc: true, with_scores: true, limit: [start, stop] }
+
+            if from[:direction] == 'up'
+              scored_relations_ids = set.range_by_score(from[:score], '+inf', args)
+            elsif from[:direction] == 'down'
+              scored_relations_ids = set.range_by_score('-inf', from[:score], args)
+            end
+          else
+            scored_relations_ids = set.range(start, stop, desc: true, with_scores: true)
+          end
+
+          break if scored_relations_ids.empty?
+
+          scored_nodes_ids = scored_relations_ids.map { |(r, s)| [s, r.split(':')[direction]] }.flatten
+          stream.add *scored_nodes_ids
+
+          last_node_id = scored_nodes_ids.last
+
+          if prune
+            stream.trim_by_rank 0, stop
+
+            unless stream.include? last_node_id
+              digg = false
+              start += stop + 1
+            end
+          else
+            digg = false
+          end
+        end
+
+        stream_count = stream.count
+
+        if limit != -1 && stream_count > limit
+          trim_stop = stream_count - limit - 1
+          stream.trim_by_rank 0, trim_stop
+        end
+      end
+
+      def calculate_stop(stream, limit, options)
+        return options[:step].to_i if options[:step].present?
+        return limit if stream.count < limit
+
+        case limit
+        when -1, 1...5
+          limit
+        else
+          5
+        end
+      end
 
       def set_name(options)
         "#{options[:relation]}:#{options[:direction]}"

@@ -85,6 +85,12 @@ describe Hari::Node do
 
       following = teresa.out(:follow).out(:follow).limit(1).from(15.minutes.ago.to_f, 'down')
       following.to_a.map(&:id).sort.should eq [maria.id]
+
+      following = teresa.out(:follow).out(:follow).limit(2)
+      following.to_a.map(&:id).sort.should eq [teresa.id, raimundo.id]
+
+      following = teresa.out(:follow).out(:follow).limit(3)
+      following.to_a.map(&:id).sort.should eq [teresa.id, raimundo.id, maria.id]
     end
   end
 
