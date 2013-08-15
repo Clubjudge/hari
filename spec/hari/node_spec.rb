@@ -188,6 +188,12 @@ describe Hari::Node do
       query.ids.should eq %w(17 16 15 14)
     end
 
+    it 'creates new relations by type' do
+      followers = Hari(user: 2).out(:follow)
+      followers.type(:user) << '13'
+      followers.nodes_ids!.include?('user#13').should be_true
+    end
+
   end
 
 end

@@ -86,6 +86,11 @@ module Hari
           self
         end
 
+        def <<(id)
+          node = Hari(name => id)
+          Hari.relation! relation.name, relation.parent.node, node
+        end
+
         def key
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"
         end
