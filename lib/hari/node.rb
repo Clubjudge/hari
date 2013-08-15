@@ -8,7 +8,7 @@ module Hari
     include Hari::Node::Repository
     extend  Hari::Node::Serialization
 
-    property :model_id, default: proc { SecureRandom.hex 6 }
+    property :model_id
 
     def initialize(attrs = {})
       attrs = { model_id: attrs } if attrs.kind_of?(::Fixnum)
@@ -16,9 +16,11 @@ module Hari
     end
 
     def generate_id
-      return super unless model_id
+      unless model_id.present?
+        self.model_id = SecureRandom.hex(6)
+      end
 
-      model_id.to_s.include?('#') ? model_id.to_s : "#{node_type}##{model_id}"
+      "#{node_type}##{model_id}"
     end
 
     def node_type
