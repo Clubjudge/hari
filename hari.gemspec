@@ -8,9 +8,17 @@ require 'hari/version'
 Gem::Specification.new do |s|
   s.name          = 'hari'
   s.version       = Hari::VERSION
-  s.summary       = 'Hari is a graph library on top of Redis + Lua scripts'
+  s.summary       = 'A tool to abstract complex relationships between ' +
+                    'Ruby objects onto Redis data structures.'
+
   s.description   = <<-MD
-    Hari is a graph library on top of Redis database + Lua scripts
+    Hari is a tool to abstract complex relationships between
+    Ruby objects onto Redis data structures.
+
+    It allows for expressive querying of those relationships
+    as well, in an easy way. It is mostly geared towards
+    typical social networking concepts like news feeds,
+    activity logs, friends of friends, mutual friends, and so on.
   MD
 
   s.author        = 'Victor Rodrigues'
