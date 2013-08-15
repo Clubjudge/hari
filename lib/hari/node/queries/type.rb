@@ -86,9 +86,10 @@ module Hari
           self
         end
 
-        def <<(id)
-          node = Hari(name => id)
-          Hari.relation! relation.name, relation.parent.node, node
+        def <<(ids)
+          Array(ids).each do |id|
+            Hari.relation! relation.name, relation.parent.node, Hari(name => id)
+          end
         end
 
         def key

@@ -75,10 +75,12 @@ module Hari
           level == 1 ? parent.node : parent.start_node
         end
 
-        def <<(node)
+        def <<(nodes)
           fail 'cannot create relation for chained queries' if level > 1
 
-          Hari.relation! relation, parent.node, Hari(node)
+          Array(nodes).each do |node|
+            Hari.relation! relation, parent.node, Hari(node)
+          end
         end
 
         def call(final = true)
