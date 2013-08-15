@@ -45,6 +45,8 @@ describe Hari::Node do
     it 'can chain queries' do
       followers_following = joao.out(:follow).out(:follow).to_a
       followers_following.map(&:id).sort.should eq [raimundo, maria, joaquim].map(&:id).sort
+
+      joao.out(:follow).out(:follow).count.should eq(4)
     end
   end
 

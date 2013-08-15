@@ -37,6 +37,8 @@ class Hari::Node::Queries::Relation
       end
 
       def step(start_node, nodes_ids, options = {})
+        return step_count(nodes_ids, options) if options[:result] == :count
+
         stream    = start_node.sorted_set("stream:#{SecureRandom.hex(6)}")
         direction = options[:direction] == :in ? 0 : 2
         limit     = (options[:limit].presence || -1).to_i
@@ -53,6 +55,10 @@ class Hari::Node::Queries::Relation
       end
 
       private
+
+      def step_count(nodes_ids, options)
+        nodes_ids.inject(0) { |b, n| b + Hari(n).sorted_set(set_name(options)).count }
+      end
 
       def step_node(node_id, stream, limit, direction, options)
         set = Hari(node_id).sorted_set set_name(options)
