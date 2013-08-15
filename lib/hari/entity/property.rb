@@ -11,6 +11,7 @@ module Hari
       end
 
       def serialize(value)
+        value = options[:default] if value.nil? && options[:default]
         serializer.serialize value, name: name
       end
 

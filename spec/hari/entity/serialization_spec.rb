@@ -10,7 +10,7 @@ describe Hari::Entity::Serialization do
                              preferences: { soccer: 100, rugby: 30 })
 
       model.to_json.should  == '{"id":null,"created_at":null,"updated_at":null,' +
-        '"name":"Ze","birth":"1986-01-23","points":200,' +
+        '"name":"Ze","country":"US","birth":"1986-01-23","points":200,' +
         '"preferences":{"soccer":100,"rugby":30}}'
     end
   end

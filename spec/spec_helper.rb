@@ -7,6 +7,7 @@ require 'active_support/core_ext/numeric/time'
 
 class TestEntity < Hari::Entity
   property :name
+  property :country,     default: 'US'
   property :birth,       type: Date
   property :points,      type: Integer
   property :preferences, type: Hash
