@@ -8,7 +8,7 @@ module Hari
     include Hari::Node::Repository
     extend  Hari::Node::Serialization
 
-    property :model_id
+    property :model_id, default: proc { SecureRandom.hex 6 }
 
     def initialize(attrs = {})
       attrs = { model_id: attrs } if attrs.kind_of?(::Fixnum)
