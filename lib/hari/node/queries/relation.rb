@@ -75,6 +75,12 @@ module Hari
           level == 1 ? parent.node : parent.start_node
         end
 
+        def <<(node)
+          fail 'cannot create relation for chained queries' if level > 1
+
+          Hari.relation! relation, parent.node, Hari(node)
+        end
+
         def call(final = true)
           if level == 1
             backend.fetch parent.node, call_args(final)
