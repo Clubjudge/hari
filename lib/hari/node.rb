@@ -17,9 +17,15 @@ module Hari
 
     def generate_id
       unless model_id.present?
-        self.model_id = SecureRandom.hex(6)
+        begin
+          self.model_id = SecureRandom.hex(6)
+        end until !Hari.redis.exists(node_key)
       end
 
+      node_key
+    end
+
+    def node_key
       "#{node_type}##{model_id}"
     end
 
