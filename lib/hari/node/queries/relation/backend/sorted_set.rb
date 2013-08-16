@@ -1,130 +1,56 @@
-class Hari::Node::Queries::Relation
-  module Backend
-    module SortedSet
-      extend self
+require 'hari/node/queries/relation/backend/sorted_set/node_step'
+require 'hari/node/queries/relation/backend/sorted_set/count_step'
 
-      def fetch(node, options = {})
-        set = node.sorted_set set_name(options)
-        send "fetch_#{options[:result]}", set, options
-      end
+module Hari::Node::Queries
+  class Relation
+    module Backend
+      module SortedSet
+        extend self
+        extend SortedSet::NodeStep
+        extend SortedSet::CountStep
 
-      def fetch_relations_ids(set, options)
-        from, limit = options.values_at(:from, :limit)
-        limit = limit.try(:to_i)
-
-        if from.present? && from[:direction] == 'up'
-          set.range_by_score from[:score], '+inf', desc: true, limit: [0, limit]
-        elsif from.present? && from[:direction] == 'down'
-          set.range_by_score '-inf', from[:score], desc: true, limit: [0, limit]
-        else
-          limit -= 1 unless limit <= 0
-          set.range from, limit, desc: true
+        def fetch(node, options = {})
+          set = node.sorted_set set_name(options)
+          send "fetch_#{options[:result]}", set, options
         end
-      end
 
-      def fetch_nodes_ids(set, options)
-        index = set.name =~ /in$/ ? 0 : 2
-        fetch_relations_ids(set, options).map { |r| r.split(':')[index] }
-      end
+        def fetch_relations_ids(set, options)
+          from, limit = options.values_at(:from, :limit)
+          limit = limit.try(:to_i)
 
-      def fetch_nodes(set, options)
-        nodes_ids = fetch_nodes_ids(set, options)
-        nodes_ids.empty? ? [] : Hari.redis.mget(nodes_ids)
-      end
-
-      def fetch_count(set, options)
-        set.count
-      end
-
-      def step(start_node, nodes_ids, options = {})
-        return step_count(nodes_ids, options) if options[:result] == :count
-
-        stream    = start_node.sorted_set("stream:#{SecureRandom.hex(6)}")
-        direction = options[:direction] == :in ? 0 : 2
-        limit     = (options[:limit].presence || -1).to_i
-
-        nodes_ids.each { |n| step_node n, stream, limit, direction, options }
-
-        nodes_ids = stream.revrange
-
-        if nodes_ids.any? && options[:result] == :nodes
-          Hari.redis.mget nodes_ids
-        else
-          nodes_ids
-        end
-      end
-
-      private
-
-      def step_count(nodes_ids, options)
-        nodes_ids.inject(0) { |b, n| b + Hari(n).sorted_set(set_name(options)).count }
-      end
-
-      def step_node(node_id, stream, limit, direction, options)
-        set = Hari(node_id).sorted_set set_name(options)
-
-        start = 0
-        stop = calculate_stop(stream, limit, options)
-        prune = stream.count > limit && limit != -1
-
-        digg = true
-
-        while digg
-          if from = options[:from].presence
-            args = { desc: true, with_scores: true, limit: [start, stop] }
-
-            if from[:direction] == 'up'
-              scored_relations_ids = set.range_by_score(from[:score], '+inf', args)
-            elsif from[:direction] == 'down'
-              scored_relations_ids = set.range_by_score('-inf', from[:score], args)
-            end
+          if from.present? && from[:direction] == 'up'
+            set.range_by_score from[:score], '+inf', desc: true, limit: [0, limit]
+          elsif from.present? && from[:direction] == 'down'
+            set.range_by_score '-inf', from[:score], desc: true, limit: [0, limit]
           else
-            scored_relations_ids = set.range(start, stop, desc: true, with_scores: true)
-          end
-
-          break if scored_relations_ids.empty?
-
-          scored_nodes_ids = scored_relations_ids.map { |(r, s)| [s, r.split(':')[direction]] }.flatten
-          stream.add *scored_nodes_ids
-
-          last_node_id = scored_nodes_ids.last
-
-          if prune
-            stream.trim_by_rank 0, stop
-
-            unless stream.include? last_node_id
-              digg = false
-              start += stop + 1
-            end
-          else
-            digg = false
+            limit -= 1 unless limit <= 0
+            set.range from, limit, desc: true
           end
         end
 
-        stream_count = stream.count
-
-        if limit != -1 && stream_count > limit
-          trim_stop = stream_count - limit - 1
-          stream.trim_by_rank 0, trim_stop
+        def fetch_nodes_ids(set, options)
+          index = set.name =~ /in$/ ? 0 : 2
+          fetch_relations_ids(set, options).map { |r| r.split(':')[index] }
         end
-      end
 
-      def calculate_stop(stream, limit, options)
-        return options[:step].to_i if options[:step].present?
-        return limit if stream.count < limit
-
-        case limit
-        when -1, 1...5
-          limit
-        else
-          5
+        def fetch_nodes(set, options)
+          nodes_ids = fetch_nodes_ids(set, options)
+          nodes_ids.empty? ? [] : Hari.redis.mget(nodes_ids)
         end
-      end
 
-      def set_name(options)
-        "#{options[:relation]}:#{options[:direction]}"
-      end
+        def fetch_count(set, options)
+          set.count
+        end
 
+        def step(start_node, nodes_ids, options)
+          send "step_#{options[:result]}", start_node, nodes_ids, options
+        end
+
+        def set_name(options)
+          "#{options[:relation]}:#{options[:direction]}"
+        end
+
+      end
     end
   end
 end

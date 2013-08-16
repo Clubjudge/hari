@@ -28,7 +28,7 @@ module Hari
         end
 
         def calculate_limit
-          options[:limit] || -1
+          (options[:limit].presence || -1).to_i
         end
 
         %w(limit step).each do |method|
@@ -95,6 +95,7 @@ module Hari
           {
             relation:  relation,
             direction: direction,
+            position:  direction == :in ? 0 : 2,
             limit:     calculate_limit,
             from:      options[:from],
             step:      options[:step],
