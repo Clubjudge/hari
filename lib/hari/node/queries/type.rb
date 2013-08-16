@@ -80,8 +80,7 @@ module Hari
         alias :rel_ids        :relations_ids
 
         def limit(start, stop)
-          options[:start] = start
-          options[:stop]  = stop
+          options.merge! start: start, stop: stop
 
           self
         end
