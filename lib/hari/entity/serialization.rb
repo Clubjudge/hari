@@ -3,6 +3,7 @@ module Hari
     module Serialization
       extend ActiveSupport::Concern
 
+      autoload :Array,    'hari/entity/serialization/array'
       autoload :Boolean,  'hari/entity/serialization/boolean'
       autoload :Date,     'hari/entity/serialization/date'
       autoload :DateTime, 'hari/entity/serialization/datetime'

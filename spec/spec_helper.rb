@@ -11,6 +11,7 @@ class TestEntity < Hari::Entity
   property :birth,       type: Date
   property :points,      type: Integer
   property :preferences, type: Hash
+  property :friends_ids, type: Array
 end
 
 class TestNode < Hari::Node
