@@ -19,6 +19,10 @@ module Hari
           value
         end
 
+        def self.method_missing(method, *args, &block)
+          ::Hash.send method, *args, &block
+        end
+
       end
     end
   end
