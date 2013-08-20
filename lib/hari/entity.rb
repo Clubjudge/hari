@@ -1,7 +1,3 @@
-require 'hari/entity/property'
-require 'hari/entity/repository'
-require 'hari/entity/serialization'
-
 module Hari
   class Entity
     extend  ActiveModel::Naming
@@ -9,8 +5,8 @@ module Hari
     include ActiveModel::Validations
 
     autoload :Property,      'hari/entity/property'
-    autoload :Repository,    'hari/entity/property'
-    autoload :Serialization, 'hari/entity/property'
+    autoload :Repository,    'hari/entity/repository'
+    autoload :Serialization, 'hari/entity/serialization'
 
     extend  Property::Builder
     include Repository
