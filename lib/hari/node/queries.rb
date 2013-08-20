@@ -29,6 +29,13 @@ module Hari
             return super() unless name
 
             define_method(name) { send key, name, options }
+
+            define_method "#{name}=" do |value|
+              data = send(name)
+              data.delete!
+
+              data.add value
+            end
           end
         end
       end
