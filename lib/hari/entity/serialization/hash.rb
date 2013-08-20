@@ -6,8 +6,8 @@ module Hari
         def self.serialize(value, options = {})
           if value.blank?
             {}
-          elsif value.kind_of?(Hash)
-            value
+          elsif value.respond_to?(:to_hash)
+            value.to_hash
           elsif value.respond_to?(:to_h)
             value.to_h
           else
