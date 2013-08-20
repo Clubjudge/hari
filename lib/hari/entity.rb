@@ -37,6 +37,7 @@ module Hari
     alias :attribute :send
     alias :read_attribute :send
     alias :has_attribute? :respond_to?
+    alias :read_attribute_for_serialization :send
 
     def write_attribute(name, value)
       send "#{name}=", value
