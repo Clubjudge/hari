@@ -4,14 +4,15 @@ require 'hari/node/queries/type'
 module Hari
   class Node < Entity
     module Queries
+      extend ActiveSupport::Concern
 
       delegate :in, :out, to: :relation_query
 
-      %w(string hash list set sorted_set).each do |key|
+      Keys::TYPES.each do |key|
         query_builder = Keys.const_get(key.camelize)
 
         define_method key do |name = nil, options = {}|
-          super() unless name
+          return super() unless name
           query = query_builder.new(query_node, options)
           query.send key, name
         end
@@ -19,6 +20,16 @@ module Hari
         define_method "#{key}!" do |name, options = {}|
           query = query_builder.new(query_node, options)
           query.send "#{key}!", name
+        end
+      end
+
+      included do
+        Keys::TYPES.each do |key|
+          define_singleton_method key do |name = nil, options = {}|
+            return super() unless name
+
+            define_method(name) { send key, name, options }
+          end
         end
       end
 
