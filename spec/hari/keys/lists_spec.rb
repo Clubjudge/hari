@@ -123,4 +123,17 @@ describe Hari::Keys::List do
     subject.members.should eq %w(10 20 55 30 40 99 66 50 60)
   end
 
+  specify 'with a type class' do
+    subject.delete!
+    friends = node.list(:friends, type: TestNode)
+
+    friends << TestNode.new(name: 'john')
+    friends << TestNode.new(name: 'josh')
+    friends << TestNode.new(name: 'jorj')
+
+    friends.to_a.map(&:name).should eq %w(john josh jorj)
+
+    friends[1].name.should eq('josh')
+  end
+
 end

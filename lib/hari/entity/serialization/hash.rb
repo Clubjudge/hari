@@ -10,6 +10,8 @@ module Hari
             value.to_hash
           elsif value.respond_to?(:to_h)
             value.to_h
+          elsif value.respond_to?(:marshal_dump)
+            value.marshal_dump
           else
             fail 'value not accepted as a Hash'
           end

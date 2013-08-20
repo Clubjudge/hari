@@ -13,11 +13,11 @@ module Hari
       end
 
       def members
-        Hari.redis.smembers key
+        desserialize Hari.redis.smembers(key)
       end
 
       def rand(count = 1)
-        Hari.redis.srandmember key, count
+        desserialize Hari.redis.srandmember(key, count)
       end
 
       def count
@@ -40,13 +40,13 @@ module Hari
       end
 
       def include?(member)
-        Hari.redis.sismember key, member
+        Hari.redis.sismember key, serialize(member)
       end
 
       alias :member? :include?
 
       def add(*members)
-        Hari.redis.sadd key, members
+        Hari.redis.sadd key, serialize(members)
       end
 
       def <<(member)
@@ -54,15 +54,15 @@ module Hari
       end
 
       def delete(*members)
-        Hari.redis.srem key, members
+        Hari.redis.srem key, serialize(members)
       end
 
       def pop
-        Hari.redis.spop key
+        desserialize Hari.redis.spop(key)
       end
 
       def intersect(*set_queries)
-        Hari.redis.sinter key, set_query_keys(set_queries)
+        desserialize Hari.redis.sinter(key, set_query_keys(set_queries))
       end
 
       def &(other_set_query)
@@ -70,7 +70,7 @@ module Hari
       end
 
       def diff(*set_queries)
-        Hari.redis.sdiff key, set_query_keys(set_queries)
+        desserialize Hari.redis.sdiff(key, set_query_keys(set_queries))
       end
 
       def -(other_set_query)

@@ -33,11 +33,11 @@ module Hari
       end
 
       def []=(index, member)
-        Hari.redis.lset key, index, member
+        Hari.redis.lset key, index, serialize(member)
       end
 
       def range(start = 0, stop = -1)
-        Hari.redis.lrange key, start, stop
+        desserialize Hari.redis.lrange(key, start, stop)
       end
 
       alias :members :range
@@ -52,7 +52,7 @@ module Hari
       end
 
       def at(index)
-        Hari.redis.lindex key, index
+        desserialize Hari.redis.lindex(key, index)
       end
 
       alias :index :at
@@ -81,20 +81,20 @@ module Hari
       end
 
       def include?(member)
-        range.include? member
+        range.include? serialize(member)
       end
 
       alias :member? :include?
 
       def push(*members)
-        Hari.redis.rpush key, members
+        Hari.redis.rpush key, serialize(members)
       end
 
       alias :rpush :push
       alias :add   :push
 
       def lpush(*members)
-        Hari.redis.lpush key, members
+        Hari.redis.lpush key, serialize(members)
       end
 
       def <<(member)
@@ -116,13 +116,13 @@ module Hari
       end
 
       def pop
-        Hari.redis.rpop key
+        desserialize Hari.redis.rpop(key)
       end
 
       alias :rpop :pop
 
       def shift
-        Hari.redis.lpop key
+        desserialize Hari.redis.lpop(key)
       end
 
       alias :lpop :shift

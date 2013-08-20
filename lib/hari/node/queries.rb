@@ -7,33 +7,22 @@ module Hari
 
       delegate :in, :out, to: :relation_query
 
-      delegate :hash,       :hash!,       to: :hash_query
-      delegate :list,       :list!,       to: :list_query
-      delegate :set,        :set!,        to: :set_query
-      delegate :sorted_set, :sorted_set!, to: :sorted_set_query
-      delegate :string,     :string!,     to: :string_query
+      %w(string hash list set sorted_set).each do |key|
+        query_builder = Keys.const_get(key.camelize)
+
+        define_method key do |name = nil, options = {}|
+          super() unless name
+          query = query_builder.new(query_node, options)
+          query.send key, name
+        end
+
+        define_method "#{key}!" do |name, options = {}|
+          query = query_builder.new(query_node, options)
+          query.send "#{key}!", name
+        end
+      end
 
       private
-
-      def hash_query
-        Keys::Hash.new query_node
-      end
-
-      def list_query
-        Keys::List.new query_node
-      end
-
-      def set_query
-        Keys::Set.new query_node
-      end
-
-      def sorted_set_query
-        Keys::SortedSet.new query_node
-      end
-
-      def string_query
-        Keys::String.new query_node
-      end
 
       def relation_query
         Queries::Relation::Start.new query_node

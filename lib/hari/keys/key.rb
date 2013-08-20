@@ -2,10 +2,10 @@ module Hari
   module Keys
     class Key
 
-      attr_reader :node, :name
+      attr_reader :node, :name, :options
 
-      def initialize(node = nil)
-        @node = node
+      def initialize(node = nil, options = {})
+        @node, @options = node, options
       end
 
       def key
@@ -41,6 +41,27 @@ module Hari
 
       def ttl
         Hari.redis.ttl key
+      end
+
+      def serialize(value)
+        type = options[:type]
+
+        if type.nil? || value.nil?
+          value
+        else
+          value.kind_of?(Enumerable) ? value.map(&:to_json) : value.to_json
+        end
+      end
+
+      def desserialize(value)
+        type = options[:type]
+
+        if type.nil? || value.nil?
+          value
+        else
+          value.kind_of?(Enumerable) ? value.map { |v| type.from_json(v) }
+                                     : type.from_json(value)
+        end
       end
 
     end

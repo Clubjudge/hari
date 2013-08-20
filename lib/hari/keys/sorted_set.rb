@@ -15,7 +15,10 @@ module Hari
       def range(start = 0, stop = -1, options = {})
         return revrange(start, stop, options) if options[:desc]
 
-        Hari.redis.zrange key, start, stop, options.slice(:with_scores)
+        result = Hari.redis.zrange key, start, stop,
+          options.slice(:with_scores)
+
+        desserialize result
       end
 
       alias :members :range
@@ -25,7 +28,10 @@ module Hari
       end
 
       def revrange(start = 0, stop = -1, options = {})
-        Hari.redis.zrevrange key, start, stop, options.slice(:with_scores)
+        result = Hari.redis.zrevrange key, start, stop,
+          options.slice(:with_scores)
+
+        desserialize result
       end
 
       alias :reverse_range :revrange
@@ -38,11 +44,17 @@ module Hari
       def range_by_score(min, max, options = {})
         return revrange_by_score(min, max, options) if options[:desc]
 
-        Hari.redis.zrangebyscore key, min, max, options.slice(:with_scores, :limit)
+        result = Hari.redis.zrangebyscore key, min, max,
+          options.slice(:with_scores, :limit)
+
+        desserialize result
       end
 
       def revrange_by_score(min, max, options = {})
-        Hari.redis.zrevrangebyscore key, max, min, options.slice(:with_scores, :limit)
+        result = Hari.redis.zrevrangebyscore key, max, min,
+          options.slice(:with_scores, :limit)
+
+        desserialize result
       end
 
       def rank(member, options = {})
@@ -55,7 +67,7 @@ module Hari
       alias :position :rank
 
       def revrank(member)
-        Hari.redis.zrevrank key, member
+        Hari.redis.zrevrank key, serialize(member)
       end
 
       alias :reverse_ranking  :revrank
@@ -87,11 +99,11 @@ module Hari
       alias :member? :include?
 
       def score(member)
-        Hari.redis.zscore key, member
+        Hari.redis.zscore key, serialize(member)
       end
 
       def add(*score_members)
-        Hari.redis.zadd key, score_members.to_a.flatten
+        Hari.redis.zadd key, serialize(score_members.to_a.flatten)
       end
 
       def <<(*score_members)
@@ -99,7 +111,7 @@ module Hari
       end
 
       def delete(*members)
-        Hari.redis.zrem key, members
+        Hari.redis.zrem key, serialize(members)
       end
 
       def trim_by_rank(start, stop)
