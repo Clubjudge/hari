@@ -19,6 +19,10 @@ module Hari
     property :updated_at, type: Time
 
     def initialize(attrs = {})
+      update_attributes attrs, save: false
+    end
+
+    def update_attributes(attrs = {}, options = {})
       return if attrs.blank?
 
       attrs = attrs.with_indifferent_access
@@ -26,6 +30,8 @@ module Hari
       self.class.properties.each do |prop|
         send("#{prop.name}=", attrs[prop.name]) if attrs[prop.name]
       end
+
+      save if options.fetch(:save, true)
     end
 
     def attributes
