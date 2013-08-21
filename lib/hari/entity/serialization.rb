@@ -13,20 +13,20 @@ module Hari
       autoload :String,   'hari/entity/serialization/string'
       autoload :Time,     'hari/entity/serialization/time'
 
-      def to_json
-        hash = self.class.properties.inject({}) do |buffer, prop|
+      def to_hash
+        self.class.properties.inject({}) do |buffer, prop|
           buffer.merge prop.name => prop.serialize(send(prop.name))
         end
+      end
 
-        Yajl::Encoder.encode hash
+      def to_json
+        Yajl::Encoder.encode to_hash
       end
 
       module ClassMethods
 
-        def from_json(source)
-          return if source.blank?
-
-          attrs = Yajl::Parser.parse(source).inject({}) do |buffer, (key, value)|
+        def from_hash(source)
+          hash = source.inject({}) do |buffer, (key, value)|
             if prop = properties.find { |p| p.name == key }
               buffer[key] = prop.desserialize(value)
             end
@@ -34,7 +34,16 @@ module Hari
             buffer
           end
 
-          new attrs
+          new hash
+        end
+
+        def from_json(source)
+          case source
+          when ::String
+            from_hash Yajl::Parser.parse(source)
+          when ::Hash
+            from_hash source
+          end
         end
 
       end

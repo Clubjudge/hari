@@ -9,5 +9,6 @@ module Hari
     autoload :Set,       'hari/keys/set'
     autoload :SortedSet, 'hari/keys/sorted_set'
     autoload :String,    'hari/keys/string'
+
   end
 end

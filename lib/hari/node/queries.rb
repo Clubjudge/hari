@@ -13,6 +13,7 @@ module Hari
 
         define_method key do |name = nil, options = {}|
           return super() unless name
+
           query = query_builder.new(query_node, options)
           query.send key, name
         end
