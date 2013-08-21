@@ -66,6 +66,10 @@ module Hari
           Type.new self, name
         end
 
+        def first
+          limit(1).to_a.first
+        end
+
         def count
           options[:result_type] = :count
           result
