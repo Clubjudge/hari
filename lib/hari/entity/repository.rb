@@ -14,7 +14,7 @@ module Hari
           fail Hari::ValidationsFailed, self unless valid?
 
           @id ||= generate_id
-          self.created_at = Time.now
+          @created_at ||= Time.now
           self.updated_at = Time.now
           persist
         end
