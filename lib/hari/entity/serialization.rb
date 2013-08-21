@@ -38,6 +38,8 @@ module Hari
         end
 
         def from_json(source)
+          return if source.blank?
+
           case source
           when ::String
             from_hash Yajl::Parser.parse(source)

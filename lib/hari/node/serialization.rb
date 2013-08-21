@@ -5,18 +5,19 @@ module Hari
       def from_source(source)
         return if source.blank?
 
-        hash = Yajl::Parser.parse(source)
-        klass = hash['id'].split('#').first.camelize.constantize
-
-        attrs = hash.inject({}) do |buffer, (key, value)|
-          if prop = klass.properties.find { |p| p.name == key }
-            buffer[key] = prop.desserialize(value)
-          end
-
-          buffer
+        case source
+        when ::String
+          hash = Yajl::Parser.parse(source)
+          source_class(hash).from_hash hash
+        when ::Hash
+          source_class(source).from_hash source
         end
+      end
 
-        klass.new attrs
+      private
+
+      def source_class(source)
+        source['id'].split('#').first.camelize.constantize
       end
 
     end
