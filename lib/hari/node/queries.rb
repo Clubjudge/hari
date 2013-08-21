@@ -35,7 +35,7 @@ module Hari
               data = send(name)
               data.delete!
 
-              data.add value
+              data.add *value
             end
           end
         end

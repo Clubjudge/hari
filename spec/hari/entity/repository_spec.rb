@@ -18,13 +18,18 @@ describe Hari::Entity::Repository do
     founds = TestEntity.find(model.id, model2.id)
     founds.size.should == 2
 
-    model2.update_attributes birth: '2001-01-01', points: '403'
+    model2.update_attributes birth: '2001-01-01', points: '403', friends_ids: [1, 3, 4]
 
     found = TestEntity.find(model2.id)
     found.birth.year.should eq(2001)
     found.birth.month.should eq(1)
     found.birth.day.should eq(1)
     found.points.should eq(403)
+    found.friends_ids.should eq [1, 3, 4]
+
+    found.update_attributes friends_ids: [4, 5, 6]
+
+    TestEntity.find(found.id).friends_ids.should eq [4, 5, 6]
   end
 
 end
