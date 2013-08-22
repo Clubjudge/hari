@@ -91,6 +91,12 @@ module Hari
           end
         end
 
+        def where(conditions = {})
+          type_class.where(conditions).tap do |index|
+            index.indexes << self
+          end
+        end
+
         def key
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"
         end
@@ -109,6 +115,10 @@ module Hari
 
         def start_key
           Hari.node_key relation.parent.node
+        end
+
+        def type_class
+          name.to_s.camelize.constantize
         end
 
       end
