@@ -3,10 +3,10 @@ module Hari
     class Property
       autoload :Builder, 'hari/entity/property/builder'
 
-      attr_accessor :name, :serializer, :options
+      attr_accessor :entity, :name, :serializer, :options
 
-      def initialize(name, options = {})
-        @name, @options = name.to_s, options
+      def initialize(entity, name, options = {})
+        @entity, @name, @options = entity, name.to_s, options
         @serializer = options.delete(:type) || Serialization::String
       end
 

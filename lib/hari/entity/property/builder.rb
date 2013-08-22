@@ -4,10 +4,20 @@ module Hari
       module Builder
 
         def property(name, options = {})
-          attr_accessor name
+          attr_reader name
+          define_attribute_method name
+
           validates_presence_of name if options[:required]
 
-          self.properties << Property.new(name, options)
+          define_method "#{name}=" do |value|
+            unless instance_variable_get("@#{name}") == value
+              send "#{name}_will_change!"
+            end
+
+            instance_variable_set "@#{name}", value
+          end
+
+          self.properties << Property.new(self, name, options)
         end
 
         def properties(*args)

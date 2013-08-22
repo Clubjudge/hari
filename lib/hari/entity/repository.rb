@@ -4,7 +4,11 @@ module Hari
       extend ActiveSupport::Concern
 
       def create_or_update
-        run_callbacks(:save) { new? ? create : update }
+        @previously_changed = changes
+
+        run_callbacks(:save) { new? ? create : update }.tap do
+          @changed_attributes.clear
+        end
       end
 
       alias :save :create_or_update
