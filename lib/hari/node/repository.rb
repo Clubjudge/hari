@@ -36,9 +36,18 @@ module Hari
           super ids, options
         end
 
-        def find_by_index(name, value, page = nil, per_page = nil)
+        def find_by(name, value)
           if property = indexed_properties.find { |p| p.name.to_s == name.to_s }
-            Index.new(property, value).list(page, per_page)
+            Index.new property, value
+          else
+            fail "missing index for key #{name}"
+          end
+        end
+
+        def where(conditions = {})
+          conditions.inject(nil) do |index, (key, value)|
+            query = find_by(key, value)
+            index ? index.append(query) : query
           end
         end
 
