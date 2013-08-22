@@ -3,6 +3,7 @@ module Hari
     extend  ActiveModel::Naming
     extend  ActiveModel::Callbacks
     include ActiveModel::Validations
+    include ActiveModel::Dirty
 
     autoload :Property,      'hari/entity/property'
     autoload :Repository,    'hari/entity/repository'

@@ -3,6 +3,24 @@ module Hari
     module Repository
       extend ActiveSupport::Concern
 
+      def reindex
+        self.class.indexed_properties.each do |property|
+          next unless change = previous_changes[property.name]
+
+          previous, current = change
+
+          Index.new(property, previous).delete(self) if previous
+          Index.new(property, current).add(self)     if current
+        end
+      end
+
+      def remove_from_indexes
+        self.class.indexed_properties.each do |property|
+          value = send(property.name)
+          Index.new(property, value).delete self if value
+        end
+      end
+
       module ClassMethods
 
         def find_one(id, options = {})
@@ -16,6 +34,21 @@ module Hari
           end
 
           super ids, options
+        end
+
+        def find_by(name, value)
+          if property = indexed_properties.find { |p| p.name.to_s == name.to_s }
+            Index.new property, value
+          else
+            fail "missing index for key #{name}"
+          end
+        end
+
+        def where(conditions = {})
+          conditions.inject(nil) do |index, (key, value)|
+            query = find_by(key, value)
+            index ? index.append(query) : query
+          end
         end
 
       end
