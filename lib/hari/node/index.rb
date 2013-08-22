@@ -42,18 +42,81 @@ module Hari
         self
       end
 
-      def list
-        if indexes.empty?
-          ids = Hari.redis.zrevrange(key, start, stop)
-        else
-          intersect
+      def from(score, direction = nil)
+        direction ||= :up
+        options[:from] = { score: score.to_f, direction: direction.to_s }
 
-          ids = Hari.redis.zrevrange(intersect_key, start, stop).tap do
-            Hari.redis.del intersect_key
-          end
+        self
+      end
+
+      def count
+        return count_intersect unless indexes.empty?
+
+        from = options[:from]
+        limit = stop == -1 ? stop : stop - start + 1
+
+        if from.present? && from[:direction] == 'up'
+          Hari.redis.zrevrangebyscore(key, '+inf', from[:score]).size
+        elsif from.present? && from[:direction] == 'down'
+          Hari.redis.zrevrangebyscore(key, from[:score], '-inf').size
+        else
+          Hari.redis.zcard key
+        end
+      end
+
+      def count_intersect
+        intersect
+
+        from = options[:from]
+        limit = stop == -1 ? stop : stop - start + 1
+
+        count = if from.present? && from[:direction] == 'up'
+          Hari.redis.zrevrangebyscore(intersect_key, '+inf', from[:score]).size
+        elsif from.present? && from[:direction] == 'down'
+          Hari.redis.zrevrangebyscore(intersect_key, from[:score], '-inf').size
+        else
+          Hari.redis.zcard intersect_key
         end
 
-        property.entity.find *ids
+        Hari.redis.del intersect_key
+
+        count
+      end
+
+      def list
+        return list_intersect unless indexes.empty?
+
+        from = options[:from]
+        limit = stop == -1 ? stop : stop - start + 1
+
+        ids = if from.present? && from[:direction] == 'up'
+          Hari.redis.zrevrangebyscore key, '+inf', from[:score], limit: [start, limit]
+        elsif from.present? && from[:direction] == 'down'
+          Hari.redis.zrevrangebyscore key, from[:score], '-inf', limit: [start, limit]
+        else
+          Hari.redis.zrevrange key, start, stop
+        end
+
+        property.entity.find_many ids
+      end
+
+      def list_intersect
+        intersect
+
+        from = options[:from]
+        limit = stop == -1 ? stop : stop - start + 1
+
+        ids = if from.present? && from[:direction] == 'up'
+          Hari.redis.zrevrangebyscore intersect_key, '+inf', from[:score], limit: [start, limit]
+        elsif from.present? && from[:direction] == 'down'
+          Hari.redis.zrevrangebyscore intersect_key, from[:score], '-inf', limit: [start, limit]
+        else
+          Hari.redis.zrevrange intersect_key, start, stop
+        end
+
+        Hari.redis.del intersect_key
+
+        property.entity.find_many ids
       end
 
       alias :to_a   :list
@@ -66,11 +129,11 @@ module Hari
       private
 
       def digest(value)
-        Digest::MD5.hexdigest value
+        Digest::MD5.hexdigest value.to_s
       end
 
       def intersect
-        Hari.redis.zinterstore intersect_key, [key] + indexes.map(&:key)
+        Hari.redis.zinterstore intersect_key, [key] + indexes.map(&:key), aggregate: 'max'
       end
 
       def intersect_key

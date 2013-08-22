@@ -72,6 +72,8 @@ module Hari
         end
 
         def find_many(ids, options = {})
+          return if ids.empty?
+
           Hari.redis.mget(ids).map &method(:from_json)
         end
 
