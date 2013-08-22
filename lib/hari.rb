@@ -8,6 +8,7 @@ require 'active_support/core_ext/string/inflections'
 require 'yajl'
 require 'erb'
 require 'ostruct'
+require 'digest/md5'
 
 require 'hari/version'
 require 'hari/configuration'

@@ -4,7 +4,11 @@ module Hari
       extend ActiveSupport::Concern
 
       def create_or_update
-        run_callbacks(:save) { new? ? create : update }
+        @previously_changed = changes
+
+        run_callbacks(:save) { new? ? create : update }.tap do
+          @changed_attributes.clear
+        end
       end
 
       alias :save :create_or_update
@@ -57,6 +61,8 @@ module Hari
         def find(*args)
           options = args.extract_options!
           args.flatten!
+          return if args.empty?
+
           args = args.map { |a| a.to_s.gsub(/^hari\:/, '') }
           args.one? ? find_one(args[0], options) : find_many(args, options)
         end
@@ -66,6 +72,8 @@ module Hari
         end
 
         def find_many(ids, options = {})
+          return if ids.empty?
+
           Hari.redis.mget(ids).map &method(:from_json)
         end
 
