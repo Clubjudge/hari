@@ -8,17 +8,25 @@ describe Hari::Node::Index do
     property :age,    index: true
   end
 
-  before do
-    joao  = Customer.create(name: 'Joao',  status: 'pending', age: '20')
-    maria = Customer.create(name: 'Maria', status: 'pending', age: '21')
+  let!(:joao)  { Customer.create name: 'Joao',  status: 'pending', age: '20' }
 
+  let!(:maria) { Customer.create name: 'Maria', status: 'pending', age: '21' }
+
+  let! :antonio do
     Delorean.time_travel_to 20.minutes.ago do
-      antonio = Customer.create(name: 'Antonio', status: 'pending', age: '21')
+      Customer.create name: 'Antonio', status: 'pending', age: '21'
     end
+  end
 
+  let! :joaquim do
     Delorean.time_travel_to 40.minutes.ago do
-      joaquim = Customer.create(name: 'Joaquim', status: 'pending', age: '21')
-      manoel  = Customer.create(name: 'Manoel',  status: 'active',  age: '21')
+      Customer.create name: 'Joaquim', status: 'pending', age: '21'
+    end
+  end
+
+  let! :manoel do
+    Delorean.time_travel_to 40.minutes.ago do
+      Customer.create name: 'Manoel',  status: 'active',  age: '21'
     end
   end
 
@@ -116,6 +124,21 @@ describe Hari::Node::Index do
         end
       end
 
+    end
+  end
+
+  describe 'from a type query' do
+    before do
+      joao.out(:follow) << antonio
+      joao.out(:follow) << maria
+      joao.out(:follow) << joaquim
+      joao.out(:follow) << manoel
+    end
+
+    it 'queries users' do
+      active = joao.out(:follow).type(:customer).where(status: 'active')
+      active.count.should eq(1)
+      active.to_a.first.name.should eq('Manoel')
     end
   end
 
