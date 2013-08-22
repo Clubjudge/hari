@@ -14,6 +14,13 @@ module Hari
         end
       end
 
+      def remove_from_indexes
+        self.class.indexed_properties.each do |property|
+          value = send(property.name)
+          Index.new(property, value).delete self if value
+        end
+      end
+
       module ClassMethods
 
         def find_one(id, options = {})

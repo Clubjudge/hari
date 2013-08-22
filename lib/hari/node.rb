@@ -16,7 +16,8 @@ module Hari
       super
     end
 
-    after_save { reindex }
+    after_save    { reindex }
+    after_destroy { remove_from_indexes }
 
     def generate_id
       unless model_id.present?
