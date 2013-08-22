@@ -1,6 +1,7 @@
 require 'hari/node/repository'
 require 'hari/node/queries'
 require 'hari/node/serialization'
+require 'hari/node/index'
 
 module Hari
   class Node < Entity
@@ -14,6 +15,8 @@ module Hari
       attrs = { model_id: attrs } if attrs.kind_of?(::Fixnum)
       super
     end
+
+    after_save { reindex }
 
     def generate_id
       unless model_id.present?
@@ -35,6 +38,10 @@ module Hari
 
     def self.node_type
       self.to_s.underscore
+    end
+
+    def self.indexed_properties
+      properties.select { |p| p.options[:index] }
     end
 
   end
