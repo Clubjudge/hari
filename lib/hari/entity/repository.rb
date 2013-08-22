@@ -61,6 +61,8 @@ module Hari
         def find(*args)
           options = args.extract_options!
           args.flatten!
+          return if args.empty?
+
           args = args.map { |a| a.to_s.gsub(/^hari\:/, '') }
           args.one? ? find_one(args[0], options) : find_many(args, options)
         end
