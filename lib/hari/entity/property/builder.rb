@@ -17,6 +17,10 @@ module Hari
             instance_variable_set "@#{name}", value
           end
 
+          if options[:type] == Serialization::Boolean
+            define_method("#{name}?") { send name }
+          end
+
           self.properties << Property.new(self, name, options)
         end
 
