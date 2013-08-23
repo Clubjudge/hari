@@ -19,8 +19,13 @@ module Hari
         end
       end
 
-      def serialize(value)
-        value = default unless value
+      def serialize(entity)
+        value = entity.attribute(name)
+
+        if value.nil?
+          value = entity.write_attribute(name, default)
+        end
+
         serializer.serialize value, name: name
       end
 

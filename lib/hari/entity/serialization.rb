@@ -25,7 +25,7 @@ module Hari
         attrs = attrs.with_indifferent_access
 
         self.class.properties.each do |prop|
-          write_attribute(prop.name, attrs[prop.name]) if attrs[prop.name]
+          write_attribute(prop.name, attrs[prop.name]) unless attrs[prop.name].nil?
         end
       end
 
@@ -46,7 +46,7 @@ module Hari
 
       def to_hash
         self.class.properties.inject({}) do |buffer, prop|
-          buffer.merge prop.name => prop.serialize(send(prop.name))
+          buffer.merge prop.name => prop.serialize(self)
         end
       end
 
