@@ -35,6 +35,10 @@ module Hari
       save if options.fetch(:save, true)
     end
 
+    def update_attribute(attribute, value)
+      update_attributes attribute => value
+    end
+
     def attributes
       self.class.properties.inject({}) do |buffer, prop|
         buffer.merge prop.name => send(prop.name)

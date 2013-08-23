@@ -30,6 +30,10 @@ describe Hari::Entity::Repository do
     found.update_attributes friends_ids: [4, 5, 6]
 
     TestEntity.find(found.id).friends_ids.should eq [4, 5, 6]
+
+    found.update_attribute :name, 'Joe'
+
+    TestEntity.find(found.id).name.should eq('Joe')
   end
 
 end
