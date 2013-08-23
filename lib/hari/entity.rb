@@ -26,7 +26,7 @@ module Hari
       attrs = attrs.with_indifferent_access
 
       self.class.properties.each do |prop|
-        write_attribute prop.name, attrs[prop.name] unless attrs[prop.name].nil?
+        write_attribute prop.name, attrs[prop.name] if attrs.key?(prop.name)
       end
 
       save if options.fetch(:save, true)

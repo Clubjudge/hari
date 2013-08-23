@@ -4,8 +4,6 @@ module Hari
       extend ActiveSupport::Concern
 
       def create_or_update
-        @previously_changed = changes
-
         run_callbacks(:save) { new? ? create : update }.tap do
           @changed_attributes.clear
         end
@@ -38,7 +36,9 @@ module Hari
       end
 
       def persist
-        Hari.redis.set id, to_json
+        source = to_json
+        @previously_changed = changes
+        Hari.redis.set id, source
       end
 
       def delete

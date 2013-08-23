@@ -3,14 +3,17 @@ module Hari
     module Repository
       extend ActiveSupport::Concern
 
-      def reindex
+      def reindex(options = {})
         self.class.indexed_properties.each do |property|
-          next unless change = previous_changes[property.name]
+          if change = previous_changes[property.name]
+            previous, current = change
 
-          previous, current = change
+            Index.new(property, previous).delete(self)
+            Index.new(property, current).add(self)
+          elsif options[:force_index]
+            Index.new(property, property.serialize(self)).add(self)
+          end
 
-          Index.new(property, previous).delete(self) if previous
-          Index.new(property, current).add(self)     if current
         end
       end
 

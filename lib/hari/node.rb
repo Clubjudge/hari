@@ -16,7 +16,8 @@ module Hari
       super
     end
 
-    after_save    { reindex }
+    after_update  { reindex }
+    after_create  { reindex force_index: true }
     after_destroy { remove_from_indexes }
 
     def generate_id

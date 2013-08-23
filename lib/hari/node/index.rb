@@ -129,7 +129,14 @@ module Hari
       private
 
       def digest(value)
-        Digest::MD5.hexdigest value.to_s
+        case value = value.to_s.strip
+        when ''
+          '_NULL_'
+        when /^[[:alnum:]]+$/
+          value
+        else
+          Digest::MD5.hexdigest value
+        end
       end
 
       def intersect

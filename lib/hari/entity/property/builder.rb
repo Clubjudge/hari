@@ -10,7 +10,7 @@ module Hari
           validates_presence_of name if options[:required]
 
           define_method "#{name}=" do |value|
-            unless instance_variable_get("@#{name}") == value
+            unless send(name) == value
               send "#{name}_will_change!"
             end
 
