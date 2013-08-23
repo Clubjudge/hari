@@ -2,14 +2,11 @@ module Hari
   class Entity
     extend  ActiveModel::Naming
     extend  ActiveModel::Callbacks
-    include ActiveModel::Validations
-    include ActiveModel::Dirty
 
     autoload :Property,      'hari/entity/property'
     autoload :Repository,    'hari/entity/repository'
     autoload :Serialization, 'hari/entity/serialization'
 
-    extend  Property::Builder
     include Repository
     include Serialization
 
@@ -37,21 +34,6 @@ module Hari
 
     def update_attribute(attribute, value)
       update_attributes attribute => value
-    end
-
-    def attributes
-      self.class.properties.inject({}) do |buffer, prop|
-        buffer.merge prop.name => send(prop.name)
-      end
-    end
-
-    alias :attribute :send
-    alias :read_attribute :send
-    alias :has_attribute? :respond_to?
-    alias :read_attribute_for_serialization :send
-
-    def write_attribute(name, value)
-      send "#{name}=", value
     end
 
     def ==(other)

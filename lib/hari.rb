@@ -17,10 +17,11 @@ require 'hari/errors'
 module Hari
   extend self
 
-  autoload :Entity,   'hari/entity'
-  autoload :Keys,     'hari/keys'
-  autoload :Node,     'hari/node'
-  autoload :Relation, 'hari/relation'
+  autoload :Entity,        'hari/entity'
+  autoload :Keys,          'hari/keys'
+  autoload :Node,          'hari/node'
+  autoload :Relation,      'hari/relation'
+  autoload :Serialization, 'hari/serialization'
 
   extend Configuration
   extend Hari::Node::Queries

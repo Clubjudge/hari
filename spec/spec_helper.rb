@@ -12,7 +12,7 @@ class TestEntity < Hari::Entity
   property :points,      type: Integer
   property :preferences, type: Hash
   property :friends_ids, type: Array
-  property :male,        type: Boolean
+  property :male,        type: Boolean, default: true
 end
 
 class TestNode < Hari::Node

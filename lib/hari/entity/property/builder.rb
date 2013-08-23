@@ -21,7 +21,7 @@ module Hari
             define_method("#{name}?") { send name }
           end
 
-          self.properties << Property.new(self, name, options)
+          properties << Property.new(self, name, options)
         end
 
         def properties(*args)
@@ -36,7 +36,8 @@ module Hari
                 a.ancestors.include? Hari::Entity
               end
 
-              entities_ancestors[1].properties.dup # the closest
+              entity = entities_ancestors[1]
+              entity ? entity.properties.dup : []
             end
           end
         end

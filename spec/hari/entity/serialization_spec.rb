@@ -12,7 +12,7 @@ describe Hari::Entity::Serialization do
 
       model.to_json.should  == '{"id":null,"created_at":null,"updated_at":null,' +
         '"name":"Ze","country":"US","birth":"1986-01-23","points":200,' +
-        '"preferences":{"soccer":100,"rugby":30},"friends_ids":[1,2,3],"male":false}'
+        '"preferences":{"soccer":100,"rugby":30},"friends_ids":[1,2,3],"male":true}'
     end
   end
 
