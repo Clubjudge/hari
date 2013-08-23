@@ -135,6 +135,14 @@ describe Hari::Node::Index do
         end
 
       end
+
+      context 'not found' do
+        subject { Customer.where(status: 'inexistent') }
+
+        it 'returns empty array' do
+          subject.to_a.should be_empty
+        end
+      end
     end
 
     context 'with from' do
