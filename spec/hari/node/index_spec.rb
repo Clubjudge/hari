@@ -43,7 +43,7 @@ describe Hari::Node::Index do
       end
 
       context 'and with pagination' do
-        let(:query_paginated) { subject.limit(0, 2) }
+        let(:query_paginated) { subject.limit 0, 2 }
 
         specify 'count' do
           query_paginated.count.should eq(4)
@@ -56,7 +56,7 @@ describe Hari::Node::Index do
     end
 
     context 'with from' do
-      let(:query) { subject.from(25.minutes.ago) }
+      let(:query) { subject.from 25.minutes.ago }
 
       specify 'count' do
         query.count.should eq(3)
@@ -67,7 +67,7 @@ describe Hari::Node::Index do
       end
 
       context 'and pagination' do
-        let(:query_paginated) { query.limit(0, 2) }
+        let(:query_paginated) { query.limit 0, 2 }
 
         specify 'count' do
           query_paginated.count.should eq(3)
@@ -91,7 +91,7 @@ describe Hari::Node::Index do
       end
 
       context 'and with pagination' do
-        let(:query_paginated) { subject.limit(0, 2) }
+        let(:query_paginated) { subject.limit 0, 2 }
 
         specify 'count' do
           query_paginated.count.should eq(3)
@@ -103,19 +103,18 @@ describe Hari::Node::Index do
       end
 
       context 'after change attribute' do
-        before  { joao.update_attribute(:active, true) }
+        before  { joao.update_attribute :active, true }
         subject { Customer.where status: 'pending', active: true }
 
         specify 'count' do
           subject.count.should eq(1)
         end
-
       end
 
       context 'querying nil value' do
         let!(:gustavo) { Customer.create name: 'Gustavo', age: '2', status: nil }
 
-        subject { Customer.where(status: nil, age: '2') }
+        subject { Customer.where status: nil, age: '2' }
 
         specify 'data' do
           subject.to_a.first.name.should eq(gustavo.name)
@@ -126,18 +125,17 @@ describe Hari::Node::Index do
         end
 
         context 'change attribute to nil' do
-          before  { gustavo.update_attribute(:age, nil) }
-          subject { Customer.where(status: nil, age: nil) }
+          before  { gustavo.update_attribute :age, nil }
+          subject { Customer.where status: nil, age: nil }
 
           specify 'count' do
             subject.count.should eq(1)
           end
         end
-
       end
 
       context 'not found' do
-        subject { Customer.where(status: 'inexistent') }
+        subject { Customer.where status: 'inexistent' }
 
         it 'returns empty array' do
           subject.to_a.should be_empty
@@ -146,7 +144,7 @@ describe Hari::Node::Index do
     end
 
     context 'with from' do
-      let(:query) { subject.from(25.minutes.ago) }
+      let(:query) { subject.from 25.minutes.ago }
 
       specify 'count' do
         query.count.should eq(2)
@@ -157,7 +155,7 @@ describe Hari::Node::Index do
       end
 
       context 'and pagination' do
-        let(:query_paginated) { query.limit(0, 1) }
+        let(:query_paginated) { query.limit 0, 1 }
 
         specify 'count' do
           query_paginated.count.should eq(2)
@@ -167,7 +165,6 @@ describe Hari::Node::Index do
           query_paginated.to_a.first.name.should eq 'Maria'
         end
       end
-
     end
   end
 
@@ -183,6 +180,22 @@ describe Hari::Node::Index do
       active = joao.out(:follow).type(:customer).where(status: 'active')
       active.count.should eq(1)
       active.to_a.first.name.should eq('Manoel')
+    end
+  end
+
+  describe 'index update' do
+    before do
+      [joao, maria, antonio, joaquim, manoel].each do |node|
+        node.update_attribute :active, true
+      end
+    end
+
+    it 'does not bring in old index' do
+      Customer.where(active: false).to_a.should be_empty
+    end
+
+    it 'brings in the new index' do
+      Customer.where(active: true).count.should eq(5)
     end
   end
 

@@ -8,19 +8,19 @@ module Hari
           if change = previous_changes[property.name]
             previous, current = change
 
-            Index.new(property, previous).delete(self)
-            Index.new(property, current).add(self)
+            Index.new(property, previous).delete self
+            Index.new(property, current).add self
           elsif options[:force_index]
-            Index.new(property, property.serialize(self)).add(self)
+            value = send(property.name)
+            Index.new(property, value).add self
           end
-
         end
       end
 
       def remove_from_indexes
         self.class.indexed_properties.each do |property|
           value = send(property.name)
-          Index.new(property, value).delete self if value
+          Index.new(property, value).delete self
         end
       end
 
