@@ -79,7 +79,7 @@ describe Hari::Keys::Set do
     member = subject.pop
     %w(10 20 30).include?(member).should be_true
     subject.count.should eq(2)
-    subject.include?(member).should be_false
+    subject.members.include?(member).should be_false
   end
 
 end

@@ -1,7 +1,6 @@
 module Hari
   module Keys
     class Set < Key
-      include Collection
 
       def set(name)
         @name = name

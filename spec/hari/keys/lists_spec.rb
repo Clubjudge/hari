@@ -131,7 +131,7 @@ describe Hari::Keys::List do
     friends << TestNode.new(name: 'josh')
     friends << TestNode.new(name: 'jorj')
 
-    friends.map(&:name).should eq %w(john josh jorj)
+    friends.to_a.map(&:name).should eq %w(john josh jorj)
 
     friends[1].name.should eq('josh')
   end
