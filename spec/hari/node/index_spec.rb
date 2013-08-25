@@ -80,7 +80,7 @@ describe Hari::Node::Index do
     end
   end
 
-  describe '.where', wip: true do
+  describe '.where' do
     subject { Customer.where status: 'pending', age: '21', active: false }
 
     context 'without from' do
