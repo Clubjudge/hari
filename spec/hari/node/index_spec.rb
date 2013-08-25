@@ -103,11 +103,17 @@ describe Hari::Node::Index do
       end
 
       context 'after change attribute' do
-        before  { joao.update_attribute(:active, true) }
-        subject { Customer.where status: 'pending', active: true }
+        before do
+          Customer.where(active: false).count.should eq(5)
+          joao.update_attribute(:active, true)
+        end
 
-        specify 'count' do
-          subject.count.should eq(1)
+        specify 'count active' do
+          Customer.where(active: true).count.should eq(1)
+        end
+
+        specify 'count inactive' do
+          Customer.where(active: false).count.should eq(4)
         end
 
       end

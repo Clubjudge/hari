@@ -65,7 +65,7 @@ module Hari
             buffer
           end
 
-          new hash
+          new(hash).tap { |e| e.changed_attributes.clear }
         end
 
         def from_json(source)
