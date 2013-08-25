@@ -87,6 +87,8 @@ module Hari
       alias :member? :include?
 
       def push(*members)
+        return if Array(members).empty?
+
         Hari.redis.rpush key, serialize(members)
       end
 

@@ -136,4 +136,18 @@ describe Hari::Keys::List do
     friends[1].name.should eq('josh')
   end
 
+  specify 'node attribution' do
+    builder = Class.new Hari::Node do
+      list :names
+      def self.node_type; 'list'; end
+    end
+
+    node = builder.create
+
+    node.names = []
+    node.names.should be_empty
+    node.names.push 'lol'
+    node.names!.should eq ['lol']
+  end
+
 end
