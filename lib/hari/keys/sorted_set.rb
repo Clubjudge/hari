@@ -1,6 +1,7 @@
 module Hari
   module Keys
     class SortedSet < Key
+      include Collection
 
       def sorted_set(name)
         @name = name

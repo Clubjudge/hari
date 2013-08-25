@@ -1,6 +1,7 @@
 module Hari
   module Keys
     class List < Key
+      include Collection
 
       def list(name)
         @name = name
