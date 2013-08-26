@@ -1,5 +1,6 @@
 require 'redis'
 require 'redis/namespace'
+require 'redis/connection/hiredis'
 require 'active_model'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/module/delegation'
