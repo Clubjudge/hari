@@ -21,6 +21,7 @@ module Hari
   autoload :Entity,        'hari/entity'
   autoload :Keys,          'hari/keys'
   autoload :Node,          'hari/node'
+  autoload :Object,        'hari/object'
   autoload :Relation,      'hari/relation'
   autoload :Serialization, 'hari/serialization'
 

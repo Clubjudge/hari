@@ -10,6 +10,12 @@ describe Hari::Serialization do
     property :active, type: Boolean
   end
 
+  class TestObject < Hari::Object
+
+    property :test, type: Boolean
+
+  end
+
   it 'adds serialization skills to class' do
     object = TestSerialization.new(name: 'Chuck')
     object.to_hash.should eq('name' => 'Chuck', 'male' => true, 'active' => false)
@@ -26,5 +32,10 @@ describe Hari::Serialization do
     from_json.male.should be_true
     from_json.male?.should be_true
     from_json.active?.should be_false
+
+    object = TestObject.new(test: true)
+    object.test.should be_true
+    object.test?.should be_true
   end
+
 end
