@@ -16,9 +16,13 @@ module Hari
       private
 
       def redis_namespace(server)
-        return server if server.kind_of?(::Redis::Namespace)
+        prefix = 'hari'
 
-        ::Redis::Namespace.new :hari, redis_server(server)
+        if server.kind_of?(::Redis::Namespace)
+          prefix = "#{server.namespace}:#{prefix}"
+        end
+
+        ::Redis::Namespace.new prefix, redis_server(server)
       end
 
       def redis_server(server)
