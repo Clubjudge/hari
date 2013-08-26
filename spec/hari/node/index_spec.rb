@@ -183,9 +183,9 @@ describe Hari::Node::Index do
     end
   end
 
-  describe 'index update' do
+  describe 'index update', wip: true do
     before do
-      [joao, maria, antonio, joaquim, manoel].each do |node|
+      Customer.where(active: false).to_a.each do |node|
         node.update_attribute :active, true
       end
     end
