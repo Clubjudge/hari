@@ -170,10 +170,7 @@ describe Hari::Node::Index do
 
   describe 'from a type query' do
     before do
-      joao.out(:follow) << antonio
-      joao.out(:follow) << maria
-      joao.out(:follow) << joaquim
-      joao.out(:follow) << manoel
+      joao.out(:follow) << [antonio, maria, joaquim, manoel]
     end
 
     it 'queries users' do
@@ -183,7 +180,7 @@ describe Hari::Node::Index do
     end
   end
 
-  describe 'index update', wip: true do
+  describe 'index update' do
     before do
       Customer.where(active: false).to_a.each do |node|
         node.update_attribute :active, true

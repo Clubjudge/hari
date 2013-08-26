@@ -27,8 +27,6 @@ module Hari
         self.class.properties.each do |prop|
           write_attribute(prop.name, attrs[prop.name]) if attrs.key?(prop.name)
         end
-
-        @changed_attributes.clear
       end
 
       def attributes
