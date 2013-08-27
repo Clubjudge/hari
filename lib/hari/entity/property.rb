@@ -10,10 +10,10 @@ module Hari
         @serializer = options.delete(:type) || Serialization::String
       end
 
-      def default
+      def default(entity)
         case options[:default]
         when Proc
-          options[:default].call
+          entity.instance_eval options[:default]
         else
           options[:default]
         end
@@ -23,7 +23,7 @@ module Hari
         value = entity.attribute(name)
 
         if value.nil?
-          value = entity.write_attribute(name, default)
+          value = entity.write_attribute(name, default(entity))
         end
 
         serializer.serialize value, name: name
