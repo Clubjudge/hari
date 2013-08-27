@@ -97,6 +97,16 @@ module Hari
           end
         end
 
+        def count_by(direction, relation, type = nil)
+          key = "%s:#{relation}:#{direction}"
+          key << ":#{type}" if type
+
+          nodes_ids.inject([]) do |buffer, node_id|
+            count = Hari.redis.zcard(key % node_id)
+            buffer << [node_id, count]
+          end.sort_by { |(n, c)| c }.reverse
+        end
+
         def key
           "#{start_key}:#{relation.name}:#{relation.direction}:#{name}"
         end
