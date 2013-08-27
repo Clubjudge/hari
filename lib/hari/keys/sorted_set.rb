@@ -1,6 +1,7 @@
 module Hari
   module Keys
     class SortedSet < Key
+      include Collection
 
       def sorted_set(name)
         @name = name
@@ -22,6 +23,7 @@ module Hari
       end
 
       alias :members :range
+      alias :to_a    :range
 
       def range_with_scores
         range 0, -1, with_scores: true
@@ -73,24 +75,11 @@ module Hari
       alias :reverse_ranking  :revrank
       alias :reverse_position :revrank
 
-      def count
+      def size
         Hari.redis.zcard key
       end
 
-      alias :size :count
-      alias :length :count
-
-      def empty?
-        count == 0
-      end
-
-      def one?
-        count == 1
-      end
-
-      def many?
-        count > 1
-      end
+      alias :length :size
 
       def include?(member)
         score(member).present?

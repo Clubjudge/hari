@@ -1,6 +1,7 @@
 module Hari
   module Keys
     class Hash < Key
+      include Collection
 
       def hash(name = nil)
         return super() unless name
@@ -16,6 +17,10 @@ module Hari
 
       def to_h
         Hari.redis.hgetall key
+      end
+
+      def to_a
+        to_h.to_a
       end
 
       def delete(field)
@@ -55,12 +60,11 @@ module Hari
         Hari.redis.hmset key, args.to_a.flatten
       end
 
-      def count
+      def size
         Hari.redis.hlen key
       end
 
-      alias :size   :count
-      alias :length :count
+      alias :length :size
 
     end
   end

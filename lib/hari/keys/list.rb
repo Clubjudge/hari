@@ -1,6 +1,7 @@
 module Hari
   module Keys
     class List < Key
+      include Collection
 
       def list(name)
         @name = name
@@ -61,24 +62,11 @@ module Hari
         Hari.redis.ltrim key, start, stop
       end
 
-      def count
+      def size
         Hari.redis.llen key
       end
 
-      alias :size :count
-      alias :length :count
-
-      def empty?
-        count == 0
-      end
-
-      def one?
-        count == 1
-      end
-
-      def many?
-        count > 1
-      end
+      alias :length :size
 
       def include?(member)
         range.include? serialize(member)

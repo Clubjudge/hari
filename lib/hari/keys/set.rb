@@ -1,6 +1,7 @@
 module Hari
   module Keys
     class Set < Key
+      include Collection
 
       def set(name)
         @name = name
@@ -16,28 +17,17 @@ module Hari
         desserialize Hari.redis.smembers(key)
       end
 
+      alias :to_a :members
+
       def rand(count = 1)
         desserialize Hari.redis.srandmember(key, count)
       end
 
-      def count
+      def size
         Hari.redis.scard key
       end
 
-      alias :size :count
-      alias :length :count
-
-      def empty?
-        count == 0
-      end
-
-      def one?
-        count == 1
-      end
-
-      def many?
-        count > 1
-      end
+      alias :length :size
 
       def include?(member)
         Hari.redis.sismember key, serialize(member)
