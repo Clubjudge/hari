@@ -73,6 +73,8 @@ module Hari
         def nodes
           if ids = nodes_ids.presence
             Hari.redis.mget(ids).map &Hari::Node.method(:from_source)
+          else
+            []
           end
         end
 
