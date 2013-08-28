@@ -97,12 +97,17 @@ module Hari
           end
         end
 
-        def count_by(direction, relation, type = nil)
+        def count_by(direction, relation, type = nil, options = {})
           key = "%s:#{relation}:#{direction}"
           key << ":#{type}" if type
 
           nodes_ids.inject([]) do |buffer, node_id|
-            count = Hari.redis.zcard(key % node_id)
+            count = if options[:from].nil?
+              Hari.redis.zcard(key % node_id)
+            else
+              Hari.redis.zcount(key % node_id, options[:from].to_f, '+inf')
+            end
+
             buffer << [node_id, count]
           end.sort_by { |(n, c)| c }.reverse
         end
