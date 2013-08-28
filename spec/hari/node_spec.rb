@@ -186,11 +186,16 @@ describe Hari::Node do
 
     it 'paginates' do
       30.times do |i|
-        Hari.relation! :follow, 'user#42', "celeb##{i + 1}"
+        Delorean.time_travel_to (i + 1).minutes.ago do
+          Hari.relation! :follow, 'user#42', "celeb##{i + 1}"
+        end
       end
 
       query = Hari('user#42').out(:follow).type(:celeb).limit(13, 16)
-      query.ids.should eq %w(17 16 15 14)
+      query.ids.should eq %w(14 15 16 17)
+
+      query = Hari(user: 42).out(:follow).type(:celeb).from(320.seconds.ago)
+      query.ids.should eq %w(1 2 3 4 5)
     end
 
     it 'creates new relations by type' do

@@ -50,8 +50,16 @@ module Hari
         def ids
           start = options[:start] || 0
           stop  = options[:stop]  || -1
+          from  = options[:from]
+          limit = stop == -1 ? stop : stop - start + 1
 
-          Hari.redis.zrevrange key, start, stop
+          if from.present? && from[:direction] == 'up'
+            Hari.redis.zrevrangebyscore key, '+inf', from[:score], limit: [start, limit]
+          elsif from.present? && from[:direction] == 'down'
+            Hari.redis.zrevrangebyscore key, from[:score], '-inf', limit: [start, limit]
+          else
+            Hari.redis.zrevrange key, start, stop
+          end
         end
 
         def nodes_ids
@@ -81,6 +89,13 @@ module Hari
 
         def limit(start, stop)
           options.merge! start: start, stop: stop
+
+          self
+        end
+
+        def from(score, direction = nil)
+          direction ||= :up
+          options[:from] = { score: score.to_f, direction: direction.to_s }
 
           self
         end
