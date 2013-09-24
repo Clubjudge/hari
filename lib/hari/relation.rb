@@ -28,13 +28,11 @@ module Hari
     alias :generate_id :key
 
     def self.create(label, start_node, end_node, attrs = {})
-      default_weight = attrs.delete(:weight)
-
       new(attrs).tap do |r|
         r.label = label
         r.start_node_id  = Hari.node_key(start_node)
         r.end_node_id    = Hari.node_key(end_node)
-        r.default_weight = default_weight
+        r.default_weight = attrs.delete(:weight)
         r.save
       end
     end
@@ -53,7 +51,7 @@ module Hari
     end
 
     def weight(direction)
-      default_weight || ::Time.now.to_f
+      default_weight.try(:to_f) || ::Time.now.to_f
     end
 
     def create
