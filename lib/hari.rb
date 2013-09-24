@@ -71,8 +71,8 @@ module Hari
     end
   end
 
-  def relation!(type, from, target)
-    Relation.create type, from, target
+  def relation!(type, from, target, attrs = {})
+    Relation.create type, from, target, attrs
   end
 
   def remove_relation!(type, from, target)

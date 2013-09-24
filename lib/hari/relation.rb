@@ -5,7 +5,7 @@ module Hari
 
     DIRECTIONS = %w(in out)
 
-    attr_accessor :label, :start_node_id, :end_node_id
+    attr_accessor :label, :start_node_id, :end_node_id, :default_weight
 
     validates :label, :start_node_id, :end_node_id, presence: true
 
@@ -28,10 +28,13 @@ module Hari
     alias :generate_id :key
 
     def self.create(label, start_node, end_node, attrs = {})
+      default_weight = attrs.delete(:weight)
+
       new(attrs).tap do |r|
         r.label = label
-        r.start_node_id = Hari.node_key(start_node)
-        r.end_node_id   = Hari.node_key(end_node)
+        r.start_node_id  = Hari.node_key(start_node)
+        r.end_node_id    = Hari.node_key(end_node)
+        r.default_weight = default_weight
         r.save
       end
     end
@@ -50,7 +53,7 @@ module Hari
     end
 
     def weight(direction)
-      ::Time.now.to_f
+      default_weight || ::Time.now.to_f
     end
 
     def create
