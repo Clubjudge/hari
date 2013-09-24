@@ -4,7 +4,7 @@ module Hari
       module Time
 
         def self.serialize(value, options = {})
-          desserialize(value, options).try :strftime, '%Y%m%d%H%M%S'
+          desserialize(value, options).try :strftime, '%Y%m%d%H%M%S.%6N'
         end
 
         def self.desserialize(value, options = {})
