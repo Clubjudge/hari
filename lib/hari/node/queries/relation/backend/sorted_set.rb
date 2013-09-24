@@ -19,9 +19,9 @@ module Hari::Node::Queries
           limit = limit.try(:to_i)
 
           if from.present? && from[:direction] == 'up'
-            set.range_by_score from[:score], '+inf', desc: true, limit: [0, limit]
+            set.range_by_score "(#{from[:score]}", '+inf', desc: true, limit: [0, limit]
           elsif from.present? && from[:direction] == 'down'
-            set.range_by_score '-inf', from[:score], desc: true, limit: [0, limit]
+            set.range_by_score '-inf', "(#{from[:score]}", desc: true, limit: [0, limit]
           else
             limit -= 1 unless limit <= 0
             set.range from, limit, desc: true
