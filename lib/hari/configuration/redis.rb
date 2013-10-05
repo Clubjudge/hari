@@ -32,7 +32,7 @@ module Hari
           prefix = "#{server.namespace}:#{prefix}"
         end
 
-        ::Redis::Namespace.new prefix, redis_server(server)
+        ::Redis::Namespace.new prefix, redis: redis_server(server)
       end
 
       def redis_server(server)
