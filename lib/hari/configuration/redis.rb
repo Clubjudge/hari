@@ -26,13 +26,7 @@ module Hari
       def redis_namespace(server)
         return redis_server(server) if redis_namespace_disabled?
 
-        prefix = 'hari'
-
-        if server.kind_of?(::Redis::Namespace)
-          prefix = "#{server.namespace}:#{prefix}"
-        end
-
-        ::Redis::Namespace.new prefix, redis: redis_server(server)
+        ::Redis::Namespace.new 'hari', redis: redis_server(server)
       end
 
       def redis_server(server)
