@@ -10,7 +10,7 @@ module Hari
         def self.desserialize(value, options = {})
           return unless value.present?
 
-          value.kind_of?(::Time) ? value : ::Time.parse(value)
+          value.kind_of?(::Time) ? value : ::Time.parse(value.to_s + 'Z')
         rescue
           raise SerializationError, "#{options[:name]}:#{value} is an invalid time"
         end
