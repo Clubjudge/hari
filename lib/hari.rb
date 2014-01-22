@@ -30,8 +30,7 @@ module Hari
 
   # Builds a Hari::Node
   #
-  # @param arg [String, Symbol] defines node as in "type#id"
-  # @param arg [Hash] defines node as in { type: id }
+  # @param (see #Hari)
   #
   # @return [Hari::Node] the Hari node
   #
@@ -45,7 +44,7 @@ module Hari
   # Returns the node String representation ("type#id"),
   # given the model / representation received
   #
-  # @param model [String, Symbol, Hash, Hari::Node, Hari::Entity, #id]
+  # @param (see #Hari)
   #
   # @return [String]
   #
@@ -59,7 +58,7 @@ module Hari
 
   # Returns the node id, given the model / representation received
   #
-  # @param model [String, Symbol, Hash, Hari::Node, #id]
+  # @param (see #Hari)
   #
   # @return [String, Fixnum]
   #
@@ -78,7 +77,7 @@ module Hari
 
   # Returns the node type given the model / representation received
   #
-  # @param model [String, Symbol, Hash, Hari::Node, Hari::Entity, Object]
+  # @param (see #Hari)
   #
   # @return [String, nil] node type
   #
@@ -139,8 +138,9 @@ end
 
 # Builds a Hari::Node
 #
-# @param arg [String, Symbol] defines node as in "type#id"
-# @param arg [Hash] defines node as in { type: id }
+# @param arg [String, Symbol, Hash, Hari::Node, Hari::Entity, #id]
+#          When String, defines node as in "type#id".
+#          When Hash, as in { type: id }.
 #
 # @return [Hari::Node] the Hari node
 #
