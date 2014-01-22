@@ -81,6 +81,13 @@ module Hari
 
 end
 
+# Builds a Hari::Node
+#
+# @param [String, Symbol] arg defines node as in "type#id"
+# @param [Hash] arg defines node as in { type: id }
+#
+# @return [Hari::Node] the Hari node
+#
 def Hari(arg)
   Hari.node arg
 end
