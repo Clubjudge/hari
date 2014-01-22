@@ -20,9 +20,7 @@ module Hari
       end
 
       def append(index)
-        self.indexes << index
-
-        self
+        self.tap { |i| i.indexes << index }
       end
 
       def start
