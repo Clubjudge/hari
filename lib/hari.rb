@@ -28,6 +28,13 @@ module Hari
   extend Configuration
   extend Hari::Node::Queries
 
+  # Builds a Hari::Node
+  #
+  # @param arg [String, Symbol] defines node as in "type#id"
+  # @param arg [Hash] defines node as in { type: id }
+  #
+  # @return [Hari::Node] the Hari node
+  #
   def node(arg)
     type, id = node_type(arg), node_id(arg)
     node = Node.new(model_id: id)
@@ -35,6 +42,13 @@ module Hari
     node
   end
 
+  # Returns the node String representation ("type#id"),
+  # given the model / representation received
+  #
+  # @param model [String, Symbol, Hash, Hari::Node, Hari::Entity, #id]
+  #
+  # @return [String]
+  #
   def node_key(model)
     if type = node_type(model)
       "#{type}##{node_id(model)}"
@@ -43,6 +57,12 @@ module Hari
     end
   end
 
+  # Returns the node id, given the model / representation received
+  #
+  # @param model [String, Symbol, Hash, Hari::Node, #id]
+  #
+  # @return [String, Fixnum]
+  #
   def node_id(model)
     case model
     when ::String, ::Symbol
@@ -56,6 +76,12 @@ module Hari
     end
   end
 
+  # Returns the node type given the model / representation received
+  #
+  # @param model [String, Symbol, Hash, Hari::Node, Hari::Entity, Object]
+  #
+  # @return [String, nil] node type
+  #
   def node_type(model)
     case model
     when ::String, ::Symbol
