@@ -14,6 +14,7 @@ module Hari
       def redis
         @redis || begin
           self.redis = 'localhost:6379'
+          @redis
         end
       end
 

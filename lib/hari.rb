@@ -71,20 +71,50 @@ module Hari
     end
   end
 
-  def relation!(type, from, target, attrs = {})
-    Relation.create type, from, target, attrs
+  # Creates or finds a relation named name from origin to target
+  #
+  # @param name [String, Symbol] the relation name
+  #
+  # @param origin [String, Hash, Hari::Node]
+  #          the representation of the node where
+  #          the relation has its origin
+  #
+  # @param target [String, Hash, Hari::Node]
+  #          the representation of the node where
+  #          the relation has its target
+  #
+  # @param attrs [Hash] { weight }
+  #
+  # @return [Hari::Relation] the created / found relation
+  #
+  def relation!(name, origin, target, attrs = {})
+    Relation.create name, origin, target, attrs
   end
 
-  def remove_relation!(type, from, target)
-    relation!(type, from, target).delete
+  # Removes the relation between origin and target named name
+  #
+  # @param name [String, Symbol] the relation name
+  #
+  # @param origin [String, Hash, Hari::Node]
+  #          the representation of the node where
+  #          the relation has its origin
+  #
+  # @param target [String, Hash, Hari::Node]
+  #          the representation of the node where
+  #          the relation has its target
+  #
+  # @return [Hari::Relation] the deleted relation
+  #
+  def remove_relation!(name, origin, target)
+    relation!(name, origin, target).delete
   end
 
 end
 
 # Builds a Hari::Node
 #
-# @param [String, Symbol] arg defines node as in "type#id"
-# @param [Hash] arg defines node as in { type: id }
+# @param arg [String, Symbol] defines node as in "type#id"
+# @param arg [Hash] defines node as in { type: id }
 #
 # @return [Hari::Node] the Hari node
 #
