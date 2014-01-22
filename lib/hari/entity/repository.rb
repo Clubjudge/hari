@@ -63,7 +63,7 @@ module Hari
           args.flatten!
           return if args.empty?
 
-          args = args.map { |a| a.to_s.gsub(/^hari\:/, '') }
+          args = args.map { |a| a.to_s.gsub /^hari\:/, '' }
           args.one? ? find_one(args[0], options) : find_many(args, options)
         end
 
