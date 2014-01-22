@@ -1,4 +1,7 @@
 module Hari
+  #
+  # Contains implementation for all key operations supported in Hari
+  #
   module Keys
 
     TYPES = %w(string list hash set sorted_set)
