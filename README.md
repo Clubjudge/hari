@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/Clubjudge/hari.png?branch=master)](https://travis-ci.org/Clubjudge/hari)
 
+[http://rubydoc.info/github/Clubjudge/hari](http://rubydoc.info/github/Clubjudge/hari)
+
 # Hari
 
 ## Mile-high view
