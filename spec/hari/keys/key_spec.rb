@@ -23,7 +23,7 @@ describe Hari::Keys::Key do
 
   specify '#expire + #persist + #ttl' do
     subject.expire 80 # ms
-    (subject.ttl.to_i < 80).should be_true
+    (subject.ttl.to_i <= 80).should be_true
 
     sleep 0.1
 
