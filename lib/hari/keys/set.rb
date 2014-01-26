@@ -1,5 +1,11 @@
 module Hari
   module Keys
+    #
+    # Enables Redis Sets in Hari.
+    # Sets are unordered collection of Strings.
+    #
+    # @see http://redis.io/commands#set
+    #
     class Set < Key
       include Collection
 

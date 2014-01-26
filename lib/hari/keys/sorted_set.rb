@@ -1,5 +1,18 @@
 module Hari
   module Keys
+    #
+    # Enables Redis Sorted sets in Hari.
+    #
+    # Sorted Sets are, similarly to Redis Sets,
+    # non repeating collections of Strings.
+    # The difference is that every member of a Sorted Set
+    # is associated with score, that is used in order to
+    # take the sorted set ordered, from the smallest to
+    # the greatest score. While members are unique,
+    # scores may be repeated.
+    #
+    # @see http://redis.io/commands#sorted_set
+    #
     class SortedSet < Key
       include Collection
 
