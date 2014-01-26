@@ -9,34 +9,33 @@ module Hari
       end
 
       def set!(name)
-        @name = name
-        members
+        set(name).members
       end
 
       def members
-        desserialize Hari.redis.smembers(key)
+        desserialize redis.smembers(key)
       end
 
       alias :to_a :members
 
       def rand(count = 1)
-        desserialize Hari.redis.srandmember(key, count)
+        desserialize redis.srandmember(key, count)
       end
 
       def size
-        Hari.redis.scard key
+        redis.scard key
       end
 
       alias :length :size
 
       def include?(member)
-        Hari.redis.sismember key, serialize(member)
+        redis.sismember key, serialize(member)
       end
 
       alias :member? :include?
 
       def add(*members)
-        Hari.redis.sadd key, serialize(members)
+        redis.sadd key, serialize(members)
       end
 
       def <<(member)
@@ -44,15 +43,15 @@ module Hari
       end
 
       def delete(*members)
-        Hari.redis.srem key, serialize(members)
+        redis.srem key, serialize(members)
       end
 
       def pop
-        desserialize Hari.redis.spop(key)
+        desserialize redis.spop(key)
       end
 
       def intersect(*set_queries)
-        desserialize Hari.redis.sinter(key, set_query_keys(set_queries))
+        desserialize redis.sinter(key, set_query_keys(set_queries))
       end
 
       def &(other_set_query)
@@ -60,7 +59,7 @@ module Hari
       end
 
       def diff(*set_queries)
-        desserialize Hari.redis.sdiff(key, set_query_keys(set_queries))
+        desserialize redis.sdiff(key, set_query_keys(set_queries))
       end
 
       def -(other_set_query)
@@ -81,7 +80,7 @@ module Hari
       end
 
       def ensure_set_query!(query)
-        unless query.kind_of?(Hari::Keys::Set)
+        unless query.kind_of? ::Hari::Keys::Set
           fail 'not a set query'
         end
       end

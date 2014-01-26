@@ -2,6 +2,10 @@ module Hari
   class Node < Entity
     module Serialization
 
+      # Creates a node from a JSON/hash source
+      #
+      # @return [Hari::Node, nil]
+      #
       def from_source(source)
         return if source.blank?
 

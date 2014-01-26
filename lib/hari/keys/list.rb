@@ -1,5 +1,11 @@
 module Hari
   module Keys
+    #
+    # Enables Redis Lists in Hari.
+    # Lists are simply lists of strings, sorted by insertion order.
+    #
+    # @see http://redis.io/commands#list
+    #
     class List < Key
       include Collection
 
@@ -9,8 +15,7 @@ module Hari
       end
 
       def list!(name)
-        @name = name
-        range
+        list(name).members
       end
 
       def [](*args)
@@ -34,11 +39,11 @@ module Hari
       end
 
       def []=(index, member)
-        Hari.redis.lset key, index, serialize(member)
+        redis.lset key, index, serialize(member)
       end
 
       def range(start = 0, stop = -1)
-        desserialize Hari.redis.lrange(key, start, stop)
+        desserialize redis.lrange(key, start, stop)
       end
 
       alias :members :range
@@ -53,17 +58,17 @@ module Hari
       end
 
       def at(index)
-        desserialize Hari.redis.lindex(key, index)
+        desserialize redis.lindex(key, index)
       end
 
       alias :index :at
 
       def trim(start, stop)
-        Hari.redis.ltrim key, start, stop
+        redis.ltrim key, start, stop
       end
 
       def size
-        Hari.redis.llen key
+        redis.llen key
       end
 
       alias :length :size
@@ -77,14 +82,14 @@ module Hari
       def push(*members)
         return if Array(members).empty?
 
-        Hari.redis.rpush key, serialize(members)
+        redis.rpush key, serialize(members)
       end
 
       alias :rpush :push
       alias :add   :push
 
       def lpush(*members)
-        Hari.redis.lpush key, serialize(members)
+        redis.lpush key, serialize(members)
       end
 
       def <<(member)
@@ -92,27 +97,27 @@ module Hari
       end
 
       def insert_before(pivot, member)
-        Hari.redis.linsert key, :before, pivot, member
+        redis.linsert key, :before, pivot, member
       end
 
       def insert_after(pivot, member)
-        Hari.redis.linsert key, :after, pivot, member
+        redis.linsert key, :after, pivot, member
       end
 
       alias :insert :insert_after
 
       def delete(member, count = 0)
-        Hari.redis.lrem key, count, member
+        redis.lrem key, count, member
       end
 
       def pop
-        desserialize Hari.redis.rpop(key)
+        desserialize redis.rpop(key)
       end
 
       alias :rpop :pop
 
       def shift
-        desserialize Hari.redis.lpop(key)
+        desserialize redis.lpop(key)
       end
 
       alias :lpop :shift

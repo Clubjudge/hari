@@ -8,7 +8,7 @@ module Hari
         end
 
         def self.desserialize(value, options = {})
-          Array value
+          serialize value, options
         end
 
         def self.method_missing(method, *args, &block)

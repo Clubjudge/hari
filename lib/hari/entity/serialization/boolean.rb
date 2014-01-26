@@ -28,13 +28,13 @@ module Hari
         }.freeze
 
         def self.serialize(value, options = {})
-          desserialize value, options
-        end
-
-        def self.desserialize(value, options = {})
           MAPPINGS[value].tap do |bool|
             fail SerializationError, "#{options[:name]}:#{value} is not boolean" if bool.nil?
           end
+        end
+
+        def self.desserialize(value, options = {})
+          serialize value, options
         end
 
       end

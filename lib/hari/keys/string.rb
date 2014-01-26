@@ -2,38 +2,35 @@ module Hari
   module Keys
     class String < Key
 
-     def string(name)
+      def string(name)
         @name = name
         self
       end
 
       def string!(name)
-        @name = name
-        to_s
+        string(name).to_s
       end
 
       def to_s
-        Hari.redis.get key
+        redis.get key
       end
 
       def set(value)
-        Hari.redis.set key, value
+        redis.set key, value
       end
 
       def length
-        Hari.redis.strlen key
+        redis.strlen key
       end
 
       alias :size :length
 
       def range(start = nil, stop = nil)
-        start ||= 0
-        stop ||= -1
-        Hari.redis.getrange key, start, stop
+        redis.getrange key, start || 0, stop || -1
       end
 
       def at(index)
-        Hari.redis.getrange key, index, index
+        redis.getrange key, index, index
       end
 
       def [](*args)
@@ -49,31 +46,29 @@ module Hari
       end
 
       def <<(value)
-        Hari.redis.append key, value
+        redis.append key, value
       end
 
       def +(i)
-        Hari.redis.incrby key, i
+        redis.incrby key, i
         self
       end
 
       def -(i)
-        Hari.redis.decrby key, i
+        redis.decrby key, i
         self
       end
 
       def bitcount(start = nil, stop = nil)
-        start ||= 0
-        stop ||= -1
-        Hari.redis.bitcount key, start, stop
+        redis.bitcount key, start || 0, stop || -1
       end
 
       def getbit(offset)
-        Hari.redis.getbit key, offset
+        redis.getbit key, offset
       end
 
       def setbit(offset, value)
-        Hari.redis.setbit key, offset, value
+        redis.setbit key, offset, value
       end
 
     end
