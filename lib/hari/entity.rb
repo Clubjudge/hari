@@ -40,16 +40,19 @@ module Hari
       other.is_a?(Hari::Entity) && id == other.id
     end
 
+    # @return [true, false]
     def new?
       id.nil?
     end
 
     alias :new_record? :new?
 
+    # @return [true, false]
     def persisted?
       not new?
     end
 
+    # @return [true, false]
     def destroyed?
       @destroyed
     end
@@ -58,6 +61,8 @@ module Hari
       '_e' + ::Time.now.strftime('%Y%m%d%H%M%S') + SecureRandom.hex(3)
     end
 
+    # @return Default inspector for Hari entities
+    #
     def to_s
       attrs = attributes
       attrs.delete 'id'

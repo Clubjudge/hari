@@ -1,5 +1,11 @@
 module Hari
   module Keys
+    #
+    # Enables Redis Lists in Hari.
+    # Lists are simply lists of strings, sorted by insertion order.
+    #
+    # @see http://redis.io/commands#list
+    #
     class List < Key
       include Collection
 
