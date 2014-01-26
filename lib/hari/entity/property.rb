@@ -10,6 +10,14 @@ module Hari
         @serializer = options.delete(:type) || Serialization::String
       end
 
+      # Returns default value, if there is any.
+      #
+      # When there's not a default, returns nil.
+      # When default is a Proc, evaluates the proc in entity's context
+      # Else, returns it's value.
+      #
+      # @param [Hari::Serialization] property's entity
+      #
       def default(entity)
         case options[:default]
         when Proc
@@ -19,6 +27,10 @@ module Hari
         end
       end
 
+      # Returns the value of property in entity serialized
+      #
+      # @param [Hari::Serialization] property's entity
+      #
       def serialize(entity)
         value = entity.attribute(name)
 
@@ -29,6 +41,8 @@ module Hari
         serializer.serialize value, name: name
       end
 
+      # @return desserialized value
+      #
       def desserialize(value)
         serializer.desserialize value, name: name
       end
